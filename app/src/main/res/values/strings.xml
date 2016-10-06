@@ -10,15 +10,25 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">Contacts permissions are needed for providing email completions.</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
-    <string name="item_menu_expencies_text">Add expency</string>
-    <string name="message_add_new_expency_dialog">Add new expency</string>
-    <string name="title_add_new_expency_dialog">Add expency</string>
-    <string name="positive_button_add_new_expency_dialog">Add</string>
-    <string name="negativ_button_add_new_expency_dialog">Dismiss</string>
-    <string name="hint_name">Name</string>
-    <string name="hint_volume">Volume</string>
+    <string name="item_menu_expencies_text">Add expense</string>
+    <string name="message_add_new_expense_dialog">Add new expense</string>
+    <string name="title_add_new_expense_dialog">Add expense</string>
+    <string name="positive_button_add_new_expense_dialog">Ok</string>
+    <string name="negativ_button_add_new_expense_dialog">Cancel</string>
+    <string name="hint_text">Comment</string>
+    <string name="hint_volume">Summa</string>
+    <string name="critical">Critical</string>
+    <string name="button_show_expenses_text">Show all Expenses</string>
+
+    <string name="title_tab_cash_flow">CashFlow</string>
+    <string name="title_tab_expenses">Expenses</string>
+    <string name="title_tab_incomes">Incomes</string>
+    <string name="message_add_new_income_dialog">Add new income</string>
+    <string name="title_add_new_income_dialog">Add income</string>
+    <string name="positive_button_add_new_income_dialog">Ok</string>
+    <string name="negativ_button_add_new_income_dialog">Cancel</string>
+
+
 </resources>

@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled false
     }
     buildTypes {
         release {
@@ -25,4 +26,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
     compile 'org.jsoup:jsoup:1.8.3'
+    testCompile 'org.mockito:mockito-core:2.1.0-RC.1'
 }

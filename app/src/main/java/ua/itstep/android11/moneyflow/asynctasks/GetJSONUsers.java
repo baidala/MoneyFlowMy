@@ -38,11 +38,11 @@ public class GetJSONUsers extends AsyncTask<String, Void, Cursor> {
         JSONObject jsonObject = null;
         MatrixCursor matrixCursor  = new MatrixCursor(
                 new String[]{
-                        Prefs.ID_FIELD_NAME,
-                        Prefs.FN_FIELD_NAME,
-                        Prefs.LN_FIELD_NAME,
-                        Prefs.BIRTHDAY_FIELD_NAME,
-                        Prefs.EMAIL_FIELD_NAME
+                        Prefs.FIELD_ID,
+                        Prefs.FIELD_FIRST_NAME,
+                        Prefs.FIELD_LAST_NAME,
+                        Prefs.FIELD_BIRTHDAY,
+                        Prefs.FIELD_EMAIL
                 });
         Document document = null;
         try {
@@ -61,11 +61,11 @@ public class GetJSONUsers extends AsyncTask<String, Void, Cursor> {
                 localJson = localJson.getJSONObject("user_class");
 
                 Object[] array = new Object[]{
-                        localJson.getInt(Prefs.ID_FIELD_NAME),
-                        localJson.getString(Prefs.FN_FIELD_NAME),
-                        localJson.getString(Prefs.LN_FIELD_NAME),
-                        localJson.getString(Prefs.BIRTHDAY_FIELD_NAME),
-                        localJson.getString(Prefs.EMAIL_FIELD_NAME)};
+                        localJson.getInt(Prefs.FIELD_ID),
+                        localJson.getString(Prefs.FIELD_FIRST_NAME),
+                        localJson.getString(Prefs.FIELD_LAST_NAME),
+                        localJson.getString(Prefs.FIELD_BIRTHDAY),
+                        localJson.getString(Prefs.FIELD_EMAIL)};
                 Log.d(Prefs.LOG_TAG, Arrays.toString(array));
 
                 matrixCursor.addRow(array);
