@@ -8,6 +8,8 @@ import android.net.Uri;
 public class Prefs {
     public static final String LOG_TAG = "MoneyFlow >>>>>>>>>>";
 
+    public static final boolean DEBUG = true;
+
     public static final int    DB_CURRENT_VERSION = 1;
 
     public static final String FIELD_FIRST_NAME = "first_name";
@@ -59,4 +61,7 @@ public class Prefs {
     //public static final String EXPENSE_NAMES_FIELD_NAME = "name";
     //public static final String EXPENSE_NAMES_FIELD_CRITICAL = "critical";
     public static final String QUERY = "SELECT expense_names.name, expenses.volume, expense_names.critical, expenses.date FROM expenses INNER JOIN expense_names ON expense_names._id = expenses.id_passive;";
+
+
+    public static final String UAH = " грн";
 }

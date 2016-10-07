@@ -36,7 +36,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateView ");
+        if (Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateView ");
 
         View view =  inflater.inflate( R.layout.fragment_cashflow, container , false);
         tvCashflowExpenses = (TextView)view.findViewById(R.id.tvCashflowExpenses);
@@ -52,31 +52,34 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<HashMap<String, String>> onCreateLoader(int id, Bundle args) {
 
-        Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateLoader ");
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateLoader ");
         return new HashMapLoader(getActivity());
     }
 
     @Override
     public void onLoadFinished(Loader<HashMap<String, String>> loader, HashMap<String, String> data) {
-        Log.d(Prefs.LOG_TAG, "CashflowFragment onLoadFinished ");
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onLoadFinished ");
+
+        tvCashflowSumma.setText( data.get(Prefs.URI_EXPENSES_TYPE) + Prefs.UAH);
+        tvCashflowIncomesSumma.setText(data.get(Prefs.URI_INCOMES_TYPE) + Prefs.UAH);
     }
 
     @Override
     public void onLoaderReset(Loader<HashMap<String, String>> loader) {
-        Log.d(Prefs.LOG_TAG, "CashflowFragment onLoaderReset");
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onLoaderReset");
     }
 
     private static class HashMapLoader extends Loader<HashMap<String, String>> {
 
         public HashMapLoader( Context context ) {
             super(context);
-            Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader() ");
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader() ");
             result = new HashMap<>();
         }
 
         @Override
         protected void onStartLoading() {
-            Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading");
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading");
 
             super.onStartLoading();
 
@@ -88,7 +91,9 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
         private void loadData(Uri uriIncomes) {
             Cursor cursor = getContext().getContentResolver().query(uriIncomes, new String[]{Prefs.FIELD_SUMMA}, null, null, null);
+            String key = uriIncomes.getLastPathSegment();
 
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  " + key);
 
             if ( cursor != null) {
                 cursor.moveToFirst();
@@ -98,20 +103,20 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                     do {
                         int temp = cursor.getInt(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
                         value += temp;
-                        Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  " + String.valueOf(temp));
+                        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  " + String.valueOf(temp));
                     } while (cursor.moveToNext());
                     //Log.d(Prefs.LOG_TAG, "ExpensesFragment HashMapLoader onStartLoading  " + String.valueOf(value));
-                    result.put(Prefs.CURRENT_MONTH, String.valueOf(value));
+                    result.put(key, String.valueOf(value));
 
                 } else {
-                    result.put(Prefs.CURRENT_MONTH, "0");
+                    result.put(key, "0");
                 }
 
                 deliverResult(result);
                 cursor.close();
 
             } else {
-                Log.d(Prefs.LOG_TAG, "CashflowFragment onStartLoading - Cursor is NULL");
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onStartLoading - Cursor is NULL");
             }
         }
 
