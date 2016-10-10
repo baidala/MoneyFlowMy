@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
-    <TextView
-        android:id="@+id/tvCurrentFragmentIncomes"
-        android:layout_width="wrap_content"
+    android:gravity="top|center">
+    <ListView
+        android:id="@+id/lvIncomes"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
 
