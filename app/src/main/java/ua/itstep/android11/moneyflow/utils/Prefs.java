@@ -22,22 +22,26 @@ public class Prefs {
 
     public static final String DB_NAME = "MoneyFlowDB";
 
+    //description(id, description)
+    public static final String TABLE_DESCRIPTION = "description";
+    public static final String FIELD_DESC = "description";
+
     //incomes(id, summa, date, desc_id)
     public static final String TABLE_INCOMES = "incomes";
     public static final String FIELD_ID = "_id";
     public static final String FIELD_SUMMA = "summa";
     public static final String FIELD_DATE = "date";
     public static final String FIELD_DESC_ID = "desc_id";
+    public static final String TABLE_INCOMES_JOINED = TABLE_INCOMES + " LEFT JOIN " + TABLE_DESCRIPTION + " ON " + TABLE_INCOMES+"."+FIELD_DESC_ID + " = " + TABLE_DESCRIPTION+"."+FIELD_ID;
 
     //expenses(id, summa, date, desc_id)
     public static final String TABLE_EXPENSES = "expenses";
+    public static final String TABLE_EXPENSES_JOINED = TABLE_EXPENSES + " LEFT JOIN " + TABLE_DESCRIPTION + " ON " + TABLE_EXPENSES+"."+FIELD_DESC_ID + " = " + TABLE_DESCRIPTION+"."+FIELD_ID;
 
     //balance(id, summa)
     public static final String TABLE_BALANCE = "balance";
 
-    //description(id, description)
-    public static final String TABLE_DESCRIPTION = "description";
-    public static final String FIELD_DESC = "description";
+
 
 
 
@@ -60,8 +64,9 @@ public class Prefs {
     //public static final String TABLE_NAME_EXPENSE_NAMES = "expense_names";
     //public static final String EXPENSE_NAMES_FIELD_NAME = "name";
     //public static final String EXPENSE_NAMES_FIELD_CRITICAL = "critical";
-    public static final String QUERY = "SELECT expense_names.name, expenses.volume, expense_names.critical, expenses.date FROM expenses INNER JOIN expense_names ON expense_names._id = expenses.id_passive;";
+    public static final String QUERY = "SELECT * FROM expenses LEFT JOIN description ON expenses.desc_id = description._id;";
 
 
     public static final String UAH = " грн";
+
 }

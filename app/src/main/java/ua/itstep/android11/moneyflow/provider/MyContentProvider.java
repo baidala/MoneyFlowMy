@@ -125,13 +125,13 @@ public class MyContentProvider extends ContentProvider {
 
         switch (uriMatcher.match(uri)) {
             case URI_EXPENSES_CODE:
-                cursor = database.query(Prefs.TABLE_EXPENSES, projection,
+                cursor = database.query(Prefs.TABLE_EXPENSES_JOINED, projection,
                         selection, selectionArgs, null, null, sortOrder);
                 Log.d(Prefs.LOG_TAG, "MyContentProvider query URI_EXPENSES_CODE");
                 break;
 
             case URI_INCOMES_CODE:
-                cursor = database.query(Prefs.TABLE_INCOMES, projection,
+                cursor = database.query(Prefs.TABLE_INCOMES_JOINED, projection,
                         selection, selectionArgs, null, null, sortOrder);
                 Log.d(Prefs.LOG_TAG, "MyContentProvider query URI_INCOMES_CODE");
                 break;

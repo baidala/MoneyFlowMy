@@ -64,7 +64,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateView ");
 
-        String[] from = new String[] {Prefs.FIELD_SUMMA, Prefs.FIELD_DESC_ID};
+        String[] from = new String[] {Prefs.FIELD_SUMMA, Prefs.FIELD_DESC};
         int[] to = new int[] {R.id.tvSummaItemIncomes, R.id.tvNameItemIncomes};
 
         View view =  inflater.inflate( R.layout.fragment_incomes, container , false);
@@ -120,7 +120,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
         public IncomesCursorLoader( Context context ) {
             super(context, Prefs.URI_INCOMES,
-                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DESC_ID},
+                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DESC},
                     null, null, null);
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader() ");
         }
@@ -129,10 +129,30 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         public Cursor loadInBackground() {
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground");
 
-            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DESC_ID}, null, null, null);
+            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC}, null, null, null);
+            if(Prefs.DEBUG) logCursor(cursor);
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground - " +cursor.getCount());
 
             return cursor;
+        }
+
+
+        // вывод в лог данных из курсора
+        private void logCursor(Cursor c) {
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    String str;
+                    do {
+                        str = "";
+                        for (String cn : c.getColumnNames()) {
+                            str = str.concat(cn + " = " + c.getString(c.getColumnIndex(cn)) + "; ");
+                        }
+                        Log.d(Prefs.LOG_TAG, str);
+                    } while (c.moveToNext());
+                }
+            } else {
+                Log.d(Prefs.LOG_TAG, "ExpensesFragment  logCursor - Cursor is null");
+            }
         }
 
 
