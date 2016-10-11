@@ -1,8 +1,11 @@
 package ua.itstep.android11.moneyflow.fragments;
 
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -15,9 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import java.util.HashMap;
+
+
 
 import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.utils.Prefs;
@@ -31,7 +34,30 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
     SimpleCursorAdapter scIncomesAdapter;
     private  static  final int LOADER_ID = 2;
 
+    private ContentObserver observer = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ContentObserver Incomes onChange " +uri);
+            getActivity().getSupportLoaderManager().restartLoader(LOADER_ID, null, IncomesFragment.this);
 
+        }
+    };
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onResume ");
+        getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observer);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onPause ");
+        getActivity().getContentResolver().unregisterContentObserver(observer);
+    }
 
     @Nullable
     @Override
@@ -51,10 +77,12 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         lvIncomes = (ListView) view.findViewById(R.id.lvIncomes);
         lvIncomes.setAdapter(scIncomesAdapter);
 
+        getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observer);
         getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
         return view;
     }
+
 
 
     @Override
@@ -85,6 +113,8 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
         scIncomesAdapter.swapCursor(null);
     }
+
+
 
     private static class IncomesCursorLoader extends CursorLoader {
 

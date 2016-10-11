@@ -2,7 +2,6 @@ package ua.itstep.android11.moneyflow.activities;
 
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
-//import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -69,9 +68,9 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         Log.d(Prefs.LOG_TAG, "DashboardActivity onCreateOptionsMenu");
-        return true;
+        return false;
     }
 
     @Override
@@ -88,7 +87,7 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
     }
 
     // вывод в лог данных из курсора
-    void logCursor(Cursor c) {
+    public void logCursor(Cursor c) {
         if (c != null) {
             if (c.moveToFirst()) {
                 String str;
@@ -105,21 +104,6 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
         }
     }
 
-    public void setFragmentInfo(int position) {
-        Log.d(Prefs.LOG_TAG, "DashboardActivity setFragmentInfo: " + position);
-        switch (position) {
-            case DashboardPagerAdapter.FRAGMENT_CASH_FLOW:
-                toolbar.setTitle(R.string.title_tab_cash_flow);
-                break;
-            case DashboardPagerAdapter.FRAGMENT_EXPENSES:
-                toolbar.setTitle(R.string.title_tab_expenses);
-                break;
-            case DashboardPagerAdapter.FRAGMENT_INCOMES:
-                toolbar.setTitle(R.string.title_tab_incomes);
-                break;
-
-        }
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

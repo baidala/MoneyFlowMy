@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="top|center">
+
     <ListView
         android:id="@+id/lvIncomes"
         android:layout_width="match_parent"

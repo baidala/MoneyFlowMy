@@ -86,7 +86,7 @@ public class MyContentProvider extends ContentProvider {
                 id = database.insert(Prefs.TABLE_INCOMES, null, values);
                 if ( id > 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_INCOMES, id);
-                    getContext().getContentResolver().notifyChange(insertUri, null);
+                    getContext().getContentResolver().notifyChange(uri, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
                     throw new SQLException("Failed to insert row into "+ uri);
@@ -98,7 +98,7 @@ public class MyContentProvider extends ContentProvider {
                 id = database.insert(Prefs.TABLE_DESCRIPTION, null, values);
                 if ( id > 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_DESCRIPTION, id);
-                    getContext().getContentResolver().notifyChange(insertUri, null);
+                    getContext().getContentResolver().notifyChange(uri, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
                     throw new SQLException("Failed to insert row into "+ uri);

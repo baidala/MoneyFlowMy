@@ -2,31 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <TextView
+        android:id="@+id/tvSummaItemExpenses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Summa"
-        android:id="@+id/tvSummaItemExpenses"
         android:layout_weight="1"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="16sp"
+        />
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:id="@+id/tvNameItemExpenses"
+        android:id="@+id/tvNameItemExpenses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
         android:layout_weight="1"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textSize="16sp"
+        />
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DD-MM-YYYY"
-            android:id="@+id/tvDateItemExpenses"
+        android:id="@+id/tvDateItemExpenses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DD-MM-YYYY"
         android:layout_weight="1"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textSize="16sp"
+        />
 
 
 </LinearLayout>
