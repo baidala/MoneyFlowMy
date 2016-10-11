@@ -30,8 +30,8 @@ public class DBHelper extends SQLiteOpenHelper {
             Prefs.TABLE_EXPENSES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID);
     private static final String CREATE_TABLE_INCOMES = String.format("create table %s (%s integer primary key autoincrement, %s real, %s text, %s integer);",
             Prefs.TABLE_INCOMES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID);
-    private static final String CREATE_TABLE_BALANCE = String.format("create table %s (%s integer primary key autoincrement, %s real);",
-            Prefs.TABLE_BALANCE, Prefs.FIELD_ID, Prefs.FIELD_SUMMA);
+    private static final String CREATE_TABLE_BALANCE = String.format("create table %s (%s integer primary key autoincrement, %s real, %s real);",
+            Prefs.TABLE_BALANCE, Prefs.FIELD_ID, Prefs.FIELD_SUMMA_EXPENSES, Prefs.FIELD_SUMMA_INCOMES);
     private static final String CREATE_TABLE_DESCRIPTION = String.format("create table %s (%s integer primary key autoincrement, %s text);",
             Prefs.TABLE_DESCRIPTION, Prefs.FIELD_ID, Prefs.FIELD_DESC);
 
@@ -48,6 +48,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_INCOMES);
         db.execSQL(CREATE_TABLE_BALANCE);
         db.execSQL(CREATE_TABLE_DESCRIPTION);
+
         Log.d(Prefs.LOG_TAG, "DBHelper  onCreate ");
 
     }
@@ -55,5 +56,17 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(Prefs.LOG_TAG, "DBHelper  onUpgrade");
+
+        db.execSQL("drop table " + Prefs.TABLE_EXPENSES);
+        db.execSQL("drop table " + Prefs.TABLE_INCOMES);
+        db.execSQL("drop table " + Prefs.TABLE_DESCRIPTION);
+        db.execSQL("drop table " + Prefs.TABLE_BALANCE);
+
+        db.execSQL(CREATE_TABLE_EXPENSES);
+        db.execSQL(CREATE_TABLE_INCOMES);
+        db.execSQL(CREATE_TABLE_BALANCE);
+        db.execSQL(CREATE_TABLE_DESCRIPTION);
+
+
     }
 }

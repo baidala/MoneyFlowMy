@@ -10,7 +10,7 @@ public class Prefs {
 
     public static final boolean DEBUG = true;
 
-    public static final int    DB_CURRENT_VERSION = 1;
+    public static final int    DB_CURRENT_VERSION = 2;
 
     public static final String FIELD_FIRST_NAME = "first_name";
     public static final String FIELD_LAST_NAME = "last_name";
@@ -38,8 +38,10 @@ public class Prefs {
     public static final String TABLE_EXPENSES = "expenses";
     public static final String TABLE_EXPENSES_JOINED = TABLE_EXPENSES + " LEFT JOIN " + TABLE_DESCRIPTION + " ON " + TABLE_EXPENSES+"."+FIELD_DESC_ID + " = " + TABLE_DESCRIPTION+"."+FIELD_ID;
 
-    //balance(id, summa)
+    //balance(id, summa_expenses, summa_incomes)
     public static final String TABLE_BALANCE = "balance";
+    public static final String FIELD_SUMMA_EXPENSES = "summa_expenses";
+    public static final String FIELD_SUMMA_INCOMES = "summa_incomes";
 
 
 
@@ -59,11 +61,12 @@ public class Prefs {
     public static final String URI_DESCRIPTION_TYPE = "description";
     public static final Uri    URI_DESCRIPTION = Uri.parse("content://" + URI_DESCRIPTION_AUTHORITIES + "/" + URI_DESCRIPTION_TYPE);
 
+    public static final String URI_BALANCE_AUTHORITIES = "ua.itstep.android11.moneyflow.provider";
+    public static final String URI_BALANCE_TYPE = "balance";
+    public static final Uri    URI_BALANCE = Uri.parse("content://" + URI_BALANCE_AUTHORITIES + "/" + URI_BALANCE_TYPE);
+
     public static final String CURRENT_MONTH = "current";
-    //The Table Expense Names
-    //public static final String TABLE_NAME_EXPENSE_NAMES = "expense_names";
-    //public static final String EXPENSE_NAMES_FIELD_NAME = "name";
-    //public static final String EXPENSE_NAMES_FIELD_CRITICAL = "critical";
+
     public static final String QUERY = "SELECT * FROM expenses LEFT JOIN description ON expenses.desc_id = description._id;";
 
 

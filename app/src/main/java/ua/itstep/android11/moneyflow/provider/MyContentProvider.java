@@ -21,11 +21,15 @@ public class MyContentProvider extends ContentProvider {
 
     private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+    public static final int URI_BALANCE_CODE = 0;
     public static final int URI_EXPENSES_CODE = 1;
     public static final int URI_INCOMES_CODE = 2;
     public static final int URI_DESCRIPTION_CODE = 3;
 
     static {
+        uriMatcher.addURI(Prefs.URI_BALANCE_AUTHORITIES,
+                Prefs.URI_BALANCE_TYPE,
+                URI_BALANCE_CODE);
         uriMatcher.addURI(Prefs.URI_EXPENSES_AUTHORITIES,
                 Prefs.URI_EXPENSES_TYPE,
                 URI_EXPENSES_CODE);
@@ -62,6 +66,18 @@ public class MyContentProvider extends ContentProvider {
         database = dbHelper.getWritableDatabase();
 
         switch (uriMatcher.match(uri)) {
+            case URI_BALANCE_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_BALANCE_CODE");
+                id = database.insert(Prefs.TABLE_BALANCE, null, values);
+                if ( id > 0 ) {
+                    insertUri = ContentUris.withAppendedId(Prefs.URI_BALANCE, id);
+                    getContext().getContentResolver().notifyChange(uri, null);
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
+                    throw new SQLException("Failed to insert row into "+ uri);
+                }
+                break;
+
             case URI_EXPENSES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider URI_EXPENSES_CODE");
                 id = database.insert(Prefs.TABLE_EXPENSES, null, values);
@@ -124,6 +140,12 @@ public class MyContentProvider extends ContentProvider {
         Cursor cursor = null;
 
         switch (uriMatcher.match(uri)) {
+            case URI_BALANCE_CODE:
+                cursor = database.query(Prefs.TABLE_BALANCE, projection,
+                        selection, selectionArgs, null, null, sortOrder);
+                Log.d(Prefs.LOG_TAG, "MyContentProvider query URI_BALANCE_CODE - "+cursor.getCount());
+                break;
+
             case URI_EXPENSES_CODE:
                 cursor = database.query(Prefs.TABLE_EXPENSES_JOINED, projection,
                         selection, selectionArgs, null, null, sortOrder);
@@ -148,9 +170,44 @@ public class MyContentProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
-        Log.d(Prefs.LOG_TAG, "MyContentProvider udate");
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        Log.d(Prefs.LOG_TAG, "MyContentProvider update");
+
+        //long id = 0;
+        int updated = 0;
+
+        database = dbHelper.getWritableDatabase();
+
+        switch (uriMatcher.match(uri)) {
+            case URI_BALANCE_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_BALANCE_CODE");
+
+                updated = database.update(Prefs.TABLE_BALANCE, values, null, null);
+
+                if ( updated > 0 ) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
+                    throw new SQLException("Failed to update row in "+ uri);
+                }
+                break;
+
+            case URI_EXPENSES_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_EXPENSES_CODE");
+
+                break;
+
+            case URI_INCOMES_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_INCOMES_CODE");
+
+                break;
+
+            case URI_DESCRIPTION_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_DESCRIPTION_CODE");
+
+                break;
+        }
+        return updated;
     }
 
     @Override
