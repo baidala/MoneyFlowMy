@@ -25,7 +25,7 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
     DashboardPagerAdapter dashboardPagerAdapter;
     ViewPager viewPager;
     Toolbar toolbar;
-    int tabPosition = 0;
+    int tabPosition = 1;
     FloatingActionButton fab;
     //public List<String> fragments = new Vector<String>();
 
@@ -35,7 +35,7 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
         setContentView(R.layout.activity_dashboard);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
+        //toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
         dashboardPagerAdapter = new DashboardPagerAdapter(this, getSupportFragmentManager());
@@ -46,9 +46,10 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tabDashboard);
         tabLayout.setupWithViewPager(viewPager);
 
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
+
+        viewPager.setCurrentItem(DashboardPagerAdapter.FRAGMENT_CASH_FLOW);
 
 
 
