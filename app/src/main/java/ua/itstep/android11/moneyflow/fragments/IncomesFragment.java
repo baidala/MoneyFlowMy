@@ -32,31 +32,24 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
     private ListView lvIncomes;
     SimpleCursorAdapter scIncomesAdapter;
-    private  static  final int LOADER_ID = 2;
+    private  static  final int INCOMES_LOADER_ID = 2;
 
-    private ContentObserver observer = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            super.onChange(selfChange, uri);
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ContentObserver Incomes onChange " +uri);
-            getActivity().getSupportLoaderManager().restartLoader(LOADER_ID, null, IncomesFragment.this);
+    private ContentObserver observerIncomes;
 
-        }
-    };
 
 
     @Override
     public void onResume() {
         super.onResume();
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onResume ");
-        getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observer);
+        getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observerIncomes);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onPause ");
-        getActivity().getContentResolver().unregisterContentObserver(observer);
+        getActivity().getContentResolver().unregisterContentObserver(observerIncomes);
     }
 
     @Nullable
@@ -67,18 +60,36 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         String[] from = new String[] {Prefs.FIELD_SUMMA, Prefs.FIELD_DESC};
         int[] to = new int[] {R.id.tvSummaItemIncomes, R.id.tvNameItemIncomes};
 
+
+
+
+        observerIncomes = new ContentObserver(new Handler()) {
+
+
+            @Override
+            public void onChange(boolean selfChange, Uri uri) {
+                super.onChange(selfChange, uri);
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ContentObserver Incomes onChange " +uri);
+
+                getActivity().getSupportLoaderManager().restartLoader(INCOMES_LOADER_ID, null, IncomesFragment.this);
+
+            }
+        };
+
+
+
         View view =  inflater.inflate( R.layout.fragment_incomes, container , false);
 
         scIncomesAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
                 R.layout.item_incomes,
                 null, from, to,
-                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+                CursorAdapter.NO_SELECTION);
 
         lvIncomes = (ListView) view.findViewById(R.id.lvIncomes);
         lvIncomes.setAdapter(scIncomesAdapter);
 
-        getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observer);
-        getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observerIncomes);
+        getActivity().getSupportLoaderManager().initLoader(INCOMES_LOADER_ID, null, this);
 
         return view;
     }
@@ -87,18 +98,24 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateLoader ");
-        return new IncomesCursorLoader(getActivity());
+        Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateLoader id - " +id);
+
+        if (id == INCOMES_LOADER_ID) {
+
+            return new IncomesCursorLoader(getActivity());
+        }
+        return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onLoadFinished " +cursor.getCount() );
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onLoadFinished cursors - " +cursor.getCount() );
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onLoadFinished loadId - " +loader.getId() );
 
         switch (loader.getId()) {
-            case LOADER_ID:
+            case INCOMES_LOADER_ID:
                 scIncomesAdapter.swapCursor(cursor);
-                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onLoadFinishe  LOADER_ID");
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onLoadFinished  INCOMES_LOADER_ID");
                 break;
         }
 
@@ -127,10 +144,10 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
         @Override
         public Cursor loadInBackground() {
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground");
+            //if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground");
 
             Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC}, null, null, null);
-            if(Prefs.DEBUG) logCursor(cursor);
+            //if(Prefs.DEBUG) logCursor(cursor);
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground - " +cursor.getCount());
 
             return cursor;

@@ -1,6 +1,7 @@
 package ua.itstep.android11.moneyflow.provider;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -71,6 +72,16 @@ public class MyContentProvider extends ContentProvider {
                 id = database.insert(Prefs.TABLE_BALANCE, null, values);
                 if ( id > 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_BALANCE, id);
+
+                    if(Prefs.DEBUG) {
+                        Log.d(Prefs.LOG_TAG, "MyContentProvider balance insertUri = " + uri);
+                        if (insertUri.equals(Prefs.URI_BALANCE))
+                            Log.d(Prefs.LOG_TAG, "MyContentProvider balance insertUri equals Prefs.URI_BALANCE- !!!!!!");
+                    }
+
+                    ContentResolver cr =getContext().getContentResolver();
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider balance insertUri ContentResolver=" + cr);
+
                     getContext().getContentResolver().notifyChange(uri, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
@@ -99,10 +110,12 @@ public class MyContentProvider extends ContentProvider {
 
             case URI_INCOMES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider URI_INCOMES_CODE");
+
                 id = database.insert(Prefs.TABLE_INCOMES, null, values);
                 if ( id > 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_INCOMES, id);
                     getContext().getContentResolver().notifyChange(uri, null);
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider insertUri = " + uri);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
                     throw new SQLException("Failed to insert row into "+ uri);
@@ -143,7 +156,7 @@ public class MyContentProvider extends ContentProvider {
             case URI_BALANCE_CODE:
                 cursor = database.query(Prefs.TABLE_BALANCE, projection,
                         selection, selectionArgs, null, null, sortOrder);
-                Log.d(Prefs.LOG_TAG, "MyContentProvider query URI_BALANCE_CODE - "+cursor.getCount());
+                Log.d(Prefs.LOG_TAG, "MyContentProvider query URI_BALANCE_CODE count - "+cursor.getCount());
                 break;
 
             case URI_EXPENSES_CODE:
@@ -185,7 +198,18 @@ public class MyContentProvider extends ContentProvider {
                 updated = database.update(Prefs.TABLE_BALANCE, values, null, null);
 
                 if ( updated > 0 ) {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update balance uri:"+ uri);
+
+                    if (uri.equals(Prefs.URI_BALANCE))
+                        Log.d(Prefs.LOG_TAG, "MyContentProvider update equals Prefs.URI_BALANCE");
+
+                    ContentResolver cr =getContext().getContentResolver();
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update ContentResolver=" + cr);
+
                     getContext().getContentResolver().notifyChange(uri, null);
+
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update notifyChange updated = "+ updated);
+
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
                     throw new SQLException("Failed to update row in "+ uri);
@@ -193,17 +217,17 @@ public class MyContentProvider extends ContentProvider {
                 break;
 
             case URI_EXPENSES_CODE:
-                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_EXPENSES_CODE");
+                Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_EXPENSES_CODE");
 
                 break;
 
             case URI_INCOMES_CODE:
-                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_INCOMES_CODE");
+                Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_INCOMES_CODE");
 
                 break;
 
             case URI_DESCRIPTION_CODE:
-                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_DESCRIPTION_CODE");
+                Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_DESCRIPTION_CODE");
 
                 break;
         }

@@ -62,14 +62,14 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
         });
         */
 
-        Log.d(Prefs.LOG_TAG, "DashboardActivity onCreate");
+        //Log.d(Prefs.LOG_TAG, "DashboardActivity onCreate");
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.main, menu);
-        Log.d(Prefs.LOG_TAG, "DashboardActivity onCreateOptionsMenu");
+        //Log.d(Prefs.LOG_TAG, "DashboardActivity onCreateOptionsMenu");
         return false;
     }
 
@@ -80,7 +80,7 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
                 AddNewExpensesDialog addNewExpencyDialog = new AddNewExpensesDialog();
                 addNewExpencyDialog.show(getSupportFragmentManager(), "addExpense");
                 //Toast.makeText(this, "Click on expency", Toast.LENGTH_SHORT).show();
-                Log.d(Prefs.LOG_TAG, "DashboardActivity onOptionsItemSelected");
+                //Log.d(Prefs.LOG_TAG, "DashboardActivity onOptionsItemSelected");
                 break;
         }
         return true;
@@ -107,12 +107,12 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.d(Prefs.LOG_TAG, "DashboardActivity onPageScrolled: " +" |" + position + " | "+ positionOffset+ " | "+ positionOffsetPixels);
+        //Log.d(Prefs.LOG_TAG, "DashboardActivity onPageScrolled: " +" |" + position + " | "+ positionOffset+ " | "+ positionOffsetPixels);
     }
 
     @Override
     public void onPageSelected(int position) {
-        Log.d(Prefs.LOG_TAG, "DashboardActivity onPageSelected: " + " | " + position);
+        //Log.d(Prefs.LOG_TAG, "DashboardActivity onPageSelected: " + " | " + position);
 
         this.tabPosition = position;
 
@@ -120,7 +120,7 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
             case DashboardPagerAdapter.FRAGMENT_CASH_FLOW:
                 toolbar.setTitle(R.string.app_name);
                 fab.setVisibility(View.GONE);
-                Log.d(Prefs.LOG_TAG, "DashboardActivity - FRAGMENT_CASH_FLOW");
+                //Log.d(Prefs.LOG_TAG, "DashboardActivity - FRAGMENT_CASH_FLOW");
                 break;
 
             case DashboardPagerAdapter.FRAGMENT_EXPENSES:
@@ -133,7 +133,7 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
                         expenseDialog.show(getSupportFragmentManager(), "ED");
                     }
                 });
-                Log.d(Prefs.LOG_TAG, "DashboardActivity - FRAGMENT_EXPENSES");
+                //Log.d(Prefs.LOG_TAG, "DashboardActivity - FRAGMENT_EXPENSES");
                 break;
 
             case DashboardPagerAdapter.FRAGMENT_INCOMES:
@@ -146,14 +146,14 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
                         incomesDialog.show(getSupportFragmentManager(), "IN");
                     }
                 });
-                Log.d(Prefs.LOG_TAG, "DashboardActivity - FRAGMENT_INCOMES");
+                //Log.d(Prefs.LOG_TAG, "DashboardActivity - FRAGMENT_INCOMES");
                 break;
         }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        Log.d(Prefs.LOG_TAG, "DashboardActivity  onPageScrollStateChanged: " + state);
+        //Log.d(Prefs.LOG_TAG, "DashboardActivity  onPageScrollStateChanged: " + state);
     }
 
 
