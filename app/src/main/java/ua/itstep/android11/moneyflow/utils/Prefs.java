@@ -72,4 +72,5 @@ public class Prefs {
 
     public static final String UAH = " грн";
 
+    public static final String SBERBANK_RF = "5595"; //320627
 }

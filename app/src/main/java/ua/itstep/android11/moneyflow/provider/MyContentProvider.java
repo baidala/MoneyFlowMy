@@ -63,6 +63,8 @@ public class MyContentProvider extends ContentProvider {
 
         long id;
         Uri insertUri = null;
+        ContentValues cvDescription;
+        ContentValues cvBalance;
 
         database = dbHelper.getWritableDatabase();
 
@@ -91,35 +93,78 @@ public class MyContentProvider extends ContentProvider {
 
             case URI_EXPENSES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider URI_EXPENSES_CODE");
-                id = database.insert(Prefs.TABLE_EXPENSES, null, values);
+
+                cvDescription = new ContentValues();
+                cvDescription.put( Prefs.FIELD_DESC, values.getAsString(Prefs.FIELD_DESC) );
+
+                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_EXPENSES_CODE FIELD_DESC="+ cvDescription.getAsString(Prefs.FIELD_DESC));
+
+                id = database.insert(Prefs.TABLE_DESCRIPTION, null, cvDescription);
+                if ( id > 0 ) {
+                    getContext().getContentResolver().notifyChange(Prefs.URI_DESCRIPTION, null);
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ Prefs.URI_DESCRIPTION);
+                    throw new SQLException("Failed to insert row into "+ Prefs.URI_DESCRIPTION);
+                }
+
+                ContentValues cvExpense = new ContentValues();
+                cvExpense.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvExpense.put( Prefs.FIELD_DESC_ID, id );
+                cvExpense.put( Prefs.FIELD_DATE, values.getAsString(Prefs.FIELD_DATE) );
+                id = database.insert(Prefs.TABLE_EXPENSES, null, cvExpense);
                 if ( id > 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_EXPENSES, id);
 
                     if(Prefs.DEBUG) {
-                        Log.d(Prefs.LOG_TAG, "MyContentProvider insertUri = " + uri);
+                        Log.d(Prefs.LOG_TAG, "MyContentProvider insertUri = " + insertUri);
                         if (insertUri.equals(Prefs.URI_EXPENSES))
-                            Log.d(Prefs.LOG_TAG, "MyContentProvider insertUri equals Prefs.URI_EXPENSES");
+                            Log.d(Prefs.LOG_TAG, "MyContentProvider insertUri equals Prefs.URI_EXPENSES!!!!!! Fail");
                     }
 
-                    getContext().getContentResolver().notifyChange(uri, null);
+                    getContext().getContentResolver().notifyChange(Prefs.URI_EXPENSES, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
                     throw new SQLException("Failed to insert row into "+ uri);
                 }
+
+                cvBalance = new ContentValues();
+                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsString(Prefs.FIELD_SUMMA) );
+                updateBalance( cvBalance );
                 break;
 
             case URI_INCOMES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider URI_INCOMES_CODE");
 
-                id = database.insert(Prefs.TABLE_INCOMES, null, values);
+                cvDescription = new ContentValues();
+                cvDescription.put( Prefs.FIELD_DESC, values.getAsString(Prefs.FIELD_DESC) );
+
+                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_INCOMES_CODE FIELD_DESC="+ cvDescription.getAsString(Prefs.FIELD_DESC));
+
+                id = database.insert(Prefs.TABLE_DESCRIPTION, null, cvDescription);
+                if ( id > 0 ) {
+                    getContext().getContentResolver().notifyChange(Prefs.URI_DESCRIPTION, null);
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ Prefs.URI_DESCRIPTION);
+                    throw new SQLException("Failed to insert row into "+ Prefs.URI_DESCRIPTION);
+                }
+
+                ContentValues cvIncomes = new ContentValues();
+                cvIncomes.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvIncomes.put( Prefs.FIELD_DESC_ID, id );
+                cvIncomes.put( Prefs.FIELD_DATE, values.getAsString(Prefs.FIELD_DATE) );
+                id = database.insert(Prefs.TABLE_INCOMES, null, cvIncomes);
                 if ( id > 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_INCOMES, id);
-                    getContext().getContentResolver().notifyChange(uri, null);
+                    getContext().getContentResolver().notifyChange(Prefs.URI_INCOMES, null);
                     Log.d(Prefs.LOG_TAG, "MyContentProvider insertUri = " + uri);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
                     throw new SQLException("Failed to insert row into "+ uri);
                 }
+
+                cvBalance = new ContentValues();
+                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsString(Prefs.FIELD_SUMMA) );
+                updateBalance( cvBalance );
                 break;
 
             case URI_DESCRIPTION_CODE:
@@ -136,6 +181,9 @@ public class MyContentProvider extends ContentProvider {
         }
         return insertUri;
     }
+
+
+
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
@@ -203,7 +251,7 @@ public class MyContentProvider extends ContentProvider {
                     if (uri.equals(Prefs.URI_BALANCE))
                         Log.d(Prefs.LOG_TAG, "MyContentProvider update equals Prefs.URI_BALANCE");
 
-                    ContentResolver cr =getContext().getContentResolver();
+                    ContentResolver cr = getContext().getContentResolver();
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update ContentResolver=" + cr);
 
                     getContext().getContentResolver().notifyChange(uri, null);
@@ -233,6 +281,62 @@ public class MyContentProvider extends ContentProvider {
         }
         return updated;
     }
+
+    private void updateBalance(ContentValues cvBalance) {
+        Cursor cursor;
+        double summa;
+
+        if ( cvBalance.containsKey(Prefs.FIELD_SUMMA_EXPENSES) ) {
+            summa = cvBalance.getAsDouble(Prefs.FIELD_SUMMA_EXPENSES);
+            cursor = database.query(Prefs.TABLE_BALANCE, new String[]{Prefs.FIELD_SUMMA_EXPENSES}, null, null, null, null, null);
+            if ( cursor.moveToFirst() ) {
+
+                double summaExpenses = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA_EXPENSES));
+                summa += summaExpenses;
+
+                Log.d(Prefs.LOG_TAG, "MyContentProvider updateBalance update summaExpenses  = "+ summa);
+
+                cvBalance.clear();
+                cvBalance.put(Prefs.FIELD_SUMMA_EXPENSES, summa);
+                update(Prefs.URI_BALANCE, cvBalance, null, null);
+
+            } else {
+                cvBalance.clear();
+                cvBalance.put(Prefs.FIELD_SUMMA_EXPENSES, summa);
+                cvBalance.put(Prefs.FIELD_SUMMA_INCOMES, 0);
+                Log.d(Prefs.LOG_TAG, "MyContentProvider updateBalance insert summaExpenses  = "+ summa);
+                insert(Prefs.URI_BALANCE, cvBalance);
+            }
+
+
+
+        } else {
+            summa = cvBalance.getAsDouble(Prefs.FIELD_SUMMA_INCOMES);
+            cursor = database.query(Prefs.TABLE_BALANCE, new String[]{Prefs.FIELD_SUMMA_INCOMES}, null, null, null, null, null);
+            if ( cursor.moveToFirst() ) {
+
+                double summaIncomes = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA_INCOMES));
+                summa += summaIncomes;
+
+                Log.d(Prefs.LOG_TAG, "MyContentProvider updateBalance update summaIncomes  = "+ summa);
+
+                cvBalance.clear();
+                cvBalance.put(Prefs.FIELD_SUMMA_INCOMES, summa);
+                update(Prefs.URI_BALANCE, cvBalance, null, null);
+
+            } else {
+                cvBalance.clear();
+                cvBalance.put(Prefs.FIELD_SUMMA_EXPENSES, 0);
+                cvBalance.put(Prefs.FIELD_SUMMA_INCOMES, summa);
+                Log.d(Prefs.LOG_TAG, "MyContentProvider updateBalance insert summaIncomes  = "+ summa);
+                insert(Prefs.URI_BALANCE, cvBalance);
+            }
+
+
+        }
+        cursor.close();
+    }
+
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {

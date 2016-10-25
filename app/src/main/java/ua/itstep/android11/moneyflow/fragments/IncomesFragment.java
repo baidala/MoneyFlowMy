@@ -57,8 +57,8 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateView ");
 
-        String[] from = new String[] {Prefs.FIELD_SUMMA, Prefs.FIELD_DESC};
-        int[] to = new int[] {R.id.tvSummaItemIncomes, R.id.tvNameItemIncomes};
+        String[] from = new String[] {Prefs.FIELD_SUMMA, Prefs.FIELD_DESC, Prefs.FIELD_DATE};
+        int[] to = new int[] {R.id.tvSummaItemIncomes, R.id.tvNameItemIncomes, R.id.tvDateItemIncomes};
 
 
 
@@ -137,7 +137,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
         public IncomesCursorLoader( Context context ) {
             super(context, Prefs.URI_INCOMES,
-                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DESC},
+                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DESC, Prefs.FIELD_DATE},
                     null, null, null);
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader() ");
         }
@@ -146,7 +146,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         public Cursor loadInBackground() {
             //if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground");
 
-            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC}, null, null, null);
+            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_DATE}, null, null, null);
             //if(Prefs.DEBUG) logCursor(cursor);
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground - " +cursor.getCount());
 

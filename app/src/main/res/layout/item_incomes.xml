@@ -7,18 +7,22 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Summa"
-        android:id="@+id/tvSummaItemIncomes"
+        android:text="Name"
+        android:id="@+id/tvNameItemIncomes"
         android:layout_weight="1"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name"
-        android:id="@+id/tvNameItemIncomes"
+        android:text="Summa"
+        android:id="@+id/tvSummaItemIncomes"
         android:layout_weight="1"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textColor="@android:color/black"/>
+
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,7 +30,8 @@
         android:text="DD-MM-YYYY"
         android:id="@+id/tvDateItemIncomes"
         android:layout_weight="1"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textColor="@android:color/black"/>
 
 
 </LinearLayout>

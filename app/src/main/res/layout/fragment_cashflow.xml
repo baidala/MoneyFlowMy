@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:shrinkColumns="*"
-    android:stretchColumns="*">
+    android:stretchColumns="*"
+    android:textColor="@android:color/black">
     <TableRow
         android:id="@+id/trExpenses"
         android:layout_width="match_parent"

@@ -17,6 +17,7 @@ import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.adapters.DashboardPagerAdapter;
 import ua.itstep.android11.moneyflow.dialogs.AddNewExpensesDialog;
 import ua.itstep.android11.moneyflow.dialogs.AddNewIncomesDialog;
+import ua.itstep.android11.moneyflow.receiver.SMSBroadcastReceiver;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 
 
@@ -27,7 +28,8 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
     Toolbar toolbar;
     int tabPosition = 1;
     FloatingActionButton fab;
-    //public List<String> fragments = new Vector<String>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
         viewPager = (ViewPager)findViewById(R.id.vpDashboard);
         viewPager.setAdapter(dashboardPagerAdapter);
         viewPager.addOnPageChangeListener(this);
+
 
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tabDashboard);
         tabLayout.setupWithViewPager(viewPager);
