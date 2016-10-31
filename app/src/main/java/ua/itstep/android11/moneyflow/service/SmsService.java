@@ -65,23 +65,25 @@ public class SmsService extends Service {
         Pattern pattern;
         Matcher matcher;
         String summa = "";
-        String date = "";
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());;
         String desc = "";
         StringBuffer buffer;
         String[] stringArray;
 
         switch( bank ) {
             case Prefs.SBERBANK_RF:
-                regexp = "^[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9] Oplata=[0-9]{2,7}.* UAH";  // NN/NN NN:NNOplata=NNNNNNNN.NN UAH
+                //String[] body = new String[5];
+                //regexp = "^[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9] Oplata=[0-9]{2,7}.* UAH";  // NN/NN NN:NNOplata=NNNNNNNN.NN UAH
                 //regexp = "Oplata=[0-9]{2,7}.* UAH";  // NN/NN NN:NNOplata=NNNNNNNN.NN UAH
-                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-                matcher = pattern.matcher(sms_body);
-                if( !matcher.find() ) {
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.regexp NotMatch!!!!!");
-                    break;
-                }
+                //pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                //matcher = pattern.matcher(sms_body);
+                //if( !matcher.find() ) {
+                 //   Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.regexp NotMatch!!!!!");
+                 //   break;
+                //}
 
-                regexp = "Oplata=[0-9]{2,7}.* UAH";
+
+                regexp = "Oplata=[0-9]{2,7}.[0-9]{0,2} UAH";
                 pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
                 matcher = pattern.matcher(sms_body);
                 if( matcher.find() ) {
@@ -92,7 +94,7 @@ public class SmsService extends Service {
                     stringArray = summa.split("Oplata=| UAH");
 
                     Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
-                    for(int i=0; i<stringArray.length; i++) {
+                    for(int i=0; i < stringArray.length; i++) {
                         Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
                     }
 
@@ -115,6 +117,32 @@ public class SmsService extends Service {
                 } else {
 
                     Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatches DATE");
+                    break;
+                }
+
+                regexp = "[0-9][0-9][0-9][0-9][\\w\\s]{1,30}Ostatok";  //
+                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                matcher = pattern.matcher(sms_body);
+                if( matcher.find() ) {
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches desc=" + matcher.group());
+
+                    desc = matcher.group();
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody desc=" + desc);
+
+                    stringArray = desc.split("[0-9][0-9][0-9][0-9] | Ostatok");
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
+                    for(int i=0; i < stringArray.length; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
+                    }
+
+
+
+                    desc = stringArray[stringArray.length - 1];
+
+                } else {
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche DESC:" + matcher.toString());
                     break;
                 }
 
