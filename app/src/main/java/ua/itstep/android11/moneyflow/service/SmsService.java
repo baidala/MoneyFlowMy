@@ -40,6 +40,9 @@ public class SmsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(Prefs.LOG_TAG, "SmsService onStartCommand "+ intent.getAction());
+        String regexp = "";
+        Pattern pattern;
+        Matcher matcher;
 
         sms_from = intent.getExtras().getString("sms_from");
         sms_body = intent.getExtras().getString("sms_body");
@@ -48,7 +51,23 @@ public class SmsService extends Service {
 
         switch(sms_from) {
             case Prefs.SBERBANK_RF:
-                parceSmsBody(Prefs.SBERBANK_RF);
+                regexp = "Oplata=[0-9]{2,7}.[0-9]{0,2} UAH";
+                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                matcher = pattern.matcher(sms_body);
+                if( matcher.find() ) {
+                    parceSmsBody(Prefs.SBERBANK_RF_OPLATA);
+                    break;
+                }
+
+                regexp = "Zachislenie: UAH [0-9,]{1,20}.[0-9]{0,2}";
+                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                matcher = pattern.matcher(sms_body);
+                if( matcher.find() ) {
+                    parceSmsBody(Prefs.SBERBANK_RF_ZACHISLENIE);
+                    break;
+                }
+
+
                 break;
         }
 
@@ -59,8 +78,8 @@ public class SmsService extends Service {
         return START_STICKY;
     }
 
-    private void parceSmsBody(String bank) {
-        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody="+ bank);
+    private void parceSmsBody(int bankOperation) {
+        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody="+ bankOperation);
         String regexp = "";
         Pattern pattern;
         Matcher matcher;
@@ -70,18 +89,8 @@ public class SmsService extends Service {
         StringBuffer buffer;
         String[] stringArray;
 
-        switch( bank ) {
-            case Prefs.SBERBANK_RF:
-                //String[] body = new String[5];
-                //regexp = "^[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9] Oplata=[0-9]{2,7}.* UAH";  // NN/NN NN:NNOplata=NNNNNNNN.NN UAH
-                //regexp = "Oplata=[0-9]{2,7}.* UAH";  // NN/NN NN:NNOplata=NNNNNNNN.NN UAH
-                //pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-                //matcher = pattern.matcher(sms_body);
-                //if( !matcher.find() ) {
-                 //   Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.regexp NotMatch!!!!!");
-                 //   break;
-                //}
-
+        switch( bankOperation ) {
+            case Prefs.SBERBANK_RF_OPLATA:
 
                 regexp = "Oplata=[0-9]{2,7}.[0-9]{0,2} UAH";
                 pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
@@ -98,10 +107,10 @@ public class SmsService extends Service {
                         Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
                     }
 
-                    summa = stringArray[1];
+                    summa = stringArray[stringArray.length - 1];
                 } else {
 
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatches SUMMA");
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche SUMMA");
                     break;
                 }
 
@@ -120,7 +129,7 @@ public class SmsService extends Service {
                     break;
                 }
 
-                regexp = "[0-9][0-9][0-9][0-9][\\w\\s]{1,30}Ostatok";  //
+                regexp = "[0-9][0-9][0-9][0-9][\\w\\s]{1,30}Ostatok";  // 6387 SBERBANK ONLINE UAH Ostatok
                 pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
                 matcher = pattern.matcher(sms_body);
                 if( matcher.find() ) {
@@ -147,26 +156,38 @@ public class SmsService extends Service {
                 }
 
 
-                saveSmsData(summa, desc, date);
+                saveSmsData(summa, desc, date, Prefs.EXPENSES);
+                break;
+
+            case Prefs.SBERBANK_RF_ZACHISLENIE:
+
+
+                saveSmsData(summa, desc, date, Prefs.INCOMES);
                 break;
         }
         Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody switch end.");
 
 
-
-
-
-
-
     }
 
-    private void saveSmsData(String summa, String desc, String date) {
+
+
+    private void saveSmsData(String summa, String desc, String date, int category) {
         ContentValues values = new ContentValues();
         values.put(Prefs.FIELD_SUMMA, summa);
         values.put(Prefs.FIELD_DESC, desc);
         values.put(Prefs.FIELD_DATE, date);
-        //TODO  switch CASE to expenses / incomes
-        getContentResolver().insert(Prefs.URI_EXPENSES, values);
+
+        switch (category) {
+            case Prefs.EXPENSES:
+                getContentResolver().insert(Prefs.URI_EXPENSES, values);
+                break;
+
+            case Prefs.INCOMES:
+                getContentResolver().insert(Prefs.URI_INCOMES, values);
+                break;
+        }
+
     }
 
     private void showNotification(String from, String text) {

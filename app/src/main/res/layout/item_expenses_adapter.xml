@@ -1,47 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
 
-    >
+
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:columnCount="4"
+    android:rowCount="2"
+    android:orientation="horizontal"
+    android:clipToPadding="true"
+    android:clipChildren="true">
+
 
     <TextView
         android:id="@+id/tvNameItemExpenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name"
-        android:layout_weight="1"
-        android:textAlignment="center"
+        android:text="Categoryhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
         android:textSize="22sp"
+
         android:elegantTextHeight="true"
         android:textStyle="normal"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:paddingRight="2dp"
+        android:paddingLeft="2dp"
+        android:layout_columnSpan="2"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill"
+        android:lines="2"
+        android:maxLines="3"
+        android:layout_width="0dp" />
+    <Space />
 
     <TextView
         android:id="@+id/tvSummaItemExpenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Summa"
-        android:layout_weight="1"
-        android:textAlignment="center"
+        android:textAlignment="gravity"
         android:textSize="22sp"
         android:textColor="@android:color/black"
-        />
-
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_column="3"
+        android:gravity="right"
+        android:layout_gravity="right" />
 
 
     <TextView
-        android:id="@+id/tvDateItemExpenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DD-MM-YYYY"
-        android:layout_weight="1"
-        android:textAlignment="center"
+        android:id="@+id/tvDescItemExpenses"
+        android:text="Description"
+        android:layout_gravity="fill_horizontal|start"
+        android:textAlignment="textStart"
         android:textSize="16sp"
-        android:textColor="@android:color/black"
-        />
+        android:elegantTextHeight="true"
+        android:textStyle="normal"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:layout_columnSpan="3" />
+
+    <TextView
+        android:id="@+id/tvDateItemExpenses"
+        android:text="DD-MM-YYYY"
+        android:textAlignment="textEnd"
+        android:textSize="16sp"
+        android:layout_row="1"
+        android:layout_column="3" />
 
 
-</LinearLayout>
+</GridLayout>

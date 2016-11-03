@@ -32,7 +32,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             messages = new SmsMessage[pduArray.length];
 
             for (int i = 0; i < pduArray.length; i++) {
-                 messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i]);  //for API 15
+                 messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i]);  //for API 15 up to 22
                 //messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i], Telephony.Sms.Intents.SMS_RECEIVED_ACTION);  //for API 23
                 Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive pduArray.length="+ pduArray.length );
 

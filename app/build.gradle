@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "ua.itstep.android11.moneyflow"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -27,4 +27,5 @@ dependencies {
     compile 'com.android.support:design:23.2.0'
     compile 'org.jsoup:jsoup:1.8.3'
     testCompile 'org.mockito:mockito-core:2.1.0-RC.1'
+    
 }
