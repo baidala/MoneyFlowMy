@@ -51,21 +51,18 @@
         android:id="@+id/tvDescItemExpenses"
         android:text="Description"
         android:layout_gravity="fill_horizontal|start"
-        android:textAlignment="textStart"
-        android:textSize="16sp"
         android:elegantTextHeight="true"
-        android:textStyle="normal"
         android:layout_row="1"
         android:layout_column="0"
-        android:layout_columnSpan="3" />
+        android:layout_columnSpan="3"
+        android:textColor="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/tvDateItemExpenses"
         android:text="DD-MM-YYYY"
-        android:textAlignment="textEnd"
-        android:textSize="16sp"
         android:layout_row="1"
-        android:layout_column="3" />
+        android:layout_column="3"
+        android:textColor="@android:color/darker_gray" />
 
 
 </GridLayout>

@@ -73,7 +73,7 @@ public class SmsService extends Service {
 
 
 
-        //saveSmsData(summa, desc, date);
+
 
         return START_STICKY;
     }
@@ -86,7 +86,6 @@ public class SmsService extends Service {
         String summa = "";
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());;
         String desc = "";
-        StringBuffer buffer;
         String[] stringArray;
 
         switch( bankOperation ) {
