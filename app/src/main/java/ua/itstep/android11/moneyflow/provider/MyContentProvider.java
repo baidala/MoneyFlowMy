@@ -229,8 +229,8 @@ public class MyContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection,
-                      String[] selectionArgs) {
+    public int update(Uri uri, ContentValues values, String where,
+                      String[] whereArgs) {
 
         Log.d(Prefs.LOG_TAG, "MyContentProvider update");
 
@@ -243,7 +243,7 @@ public class MyContentProvider extends ContentProvider {
             case URI_BALANCE_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_BALANCE_CODE");
 
-                updated = database.update(Prefs.TABLE_BALANCE, values, null, null);
+                updated = database.update(Prefs.TABLE_BALANCE, values, where, whereArgs);
 
                 if ( updated > 0 ) {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update balance uri:"+ uri);
@@ -267,6 +267,34 @@ public class MyContentProvider extends ContentProvider {
             case URI_EXPENSES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_EXPENSES_CODE");
 
+                ContentValues cvExpense = new ContentValues();
+                cvExpense.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+
+                updated = database.update(Prefs.TABLE_EXPENSES, cvExpense, where, whereArgs);
+
+                if ( updated > 0 ) {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update notifyChange updated = "+ updated);
+                    getContext().getContentResolver().notifyChange(uri, null);
+
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
+                    throw new SQLException("Failed to update row in "+ uri);
+                }
+
+                ContentValues cvBalance = new ContentValues();
+                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsDouble(Prefs.FIELD_SUMMA_EXPENSES) );
+                updateBalance( cvBalance );
+
+                cvBalance.clear();
+                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                updateBalance( cvBalance );
+
+                ContentValues cvDescription = new ContentValues();
+                cvDescription.put( Prefs.FIELD_DESC, values.getAsString(Prefs.FIELD_DESC) );
+                updateDescription( cvDescription, where, whereArgs );
+
+
+
                 break;
 
             case URI_INCOMES_CODE:
@@ -277,9 +305,43 @@ public class MyContentProvider extends ContentProvider {
             case URI_DESCRIPTION_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_DESCRIPTION_CODE");
 
+                updated = database.update(Prefs.TABLE_DESCRIPTION, values, where, whereArgs);
+
+                if ( updated > 0 ) {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update desc uri:"+ uri);
+
+
+
+
+                    getContext().getContentResolver().notifyChange(uri, null);
+
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update notifyChange updated = "+ updated);
+
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
+                    throw new SQLException("Failed to update row in "+ uri);
+                }
+
                 break;
         }
         return updated;
+    }
+
+    private void updateDescription(ContentValues cvDescription, String where, String[] whereArgs) {
+        Cursor cursor;
+        long id;
+
+
+        cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_DESC_ID}, where, whereArgs, null, null, null);
+        if ( cursor.moveToFirst() ) {
+            id = cursor.getLong(cursor.getColumnIndex(Prefs.FIELD_DESC_ID));
+
+            String _id = Long.toString(id);
+
+            update(Prefs.URI_DESCRIPTION, cvDescription, where, new String[]{_id});
+        }
+
+
     }
 
     private void updateBalance(ContentValues cvBalance) {
