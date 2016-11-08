@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
@@ -87,6 +88,12 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
         lvIncomes = (ListView) view.findViewById(R.id.lvIncomes);
         lvIncomes.setAdapter(scIncomesAdapter);
+        lvIncomes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateView onItemClick:" + position);
+            }
+        });
 
         getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observerIncomes);
         getActivity().getSupportLoaderManager().initLoader(INCOMES_LOADER_ID, null, this);
@@ -125,7 +132,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        //TODO
+
         Log.d(Prefs.LOG_TAG, "IncomesFragment onLoaderReset");
 
         scIncomesAdapter.swapCursor(null);
@@ -135,7 +142,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
     private static class IncomesCursorLoader extends CursorLoader {
 
-        public IncomesCursorLoader( Context context ) {
+        IncomesCursorLoader( Context context ) {
             super(context, Prefs.URI_INCOMES,
                     new String[] {Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DESC, Prefs.FIELD_DATE},
                     null, null, null);
