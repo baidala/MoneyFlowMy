@@ -340,7 +340,7 @@ public class MyContentProvider extends ContentProvider {
 
             update(Prefs.URI_DESCRIPTION, cvDescription, where, new String[]{_id});
         }
-
+        cursor.close();
 
     }
 
