@@ -15,6 +15,9 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -95,6 +98,8 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
             }
         });
 
+        setHasOptionsMenu(true);
+
         getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observerIncomes);
         getActivity().getSupportLoaderManager().initLoader(INCOMES_LOADER_ID, null, this);
 
@@ -139,6 +144,28 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateOptionsMenu");
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_refresh:
+                getActivity().getSupportLoaderManager().restartLoader(INCOMES_LOADER_ID, null, this);
+
+                //Toast.makeText(this, "Click on expency", Toast.LENGTH_SHORT).show();
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onOptionsItemSelected");
+                break;
+        }
+        return true;
+    }
 
     private static class IncomesCursorLoader extends CursorLoader {
 

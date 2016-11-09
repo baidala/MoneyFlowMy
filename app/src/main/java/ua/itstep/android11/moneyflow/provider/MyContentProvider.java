@@ -72,7 +72,7 @@ public class MyContentProvider extends ContentProvider {
             case URI_BALANCE_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider URI_BALANCE_CODE");
                 id = database.insert(Prefs.TABLE_BALANCE, null, values);
-                if ( id > 0 ) {
+                if ( id != 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_BALANCE, id);
 
                     if(Prefs.DEBUG) {
@@ -100,7 +100,7 @@ public class MyContentProvider extends ContentProvider {
                 Log.d(Prefs.LOG_TAG, "MyContentProvider URI_EXPENSES_CODE FIELD_DESC="+ cvDescription.getAsString(Prefs.FIELD_DESC));
 
                 id = database.insert(Prefs.TABLE_DESCRIPTION, null, cvDescription);
-                if ( id > 0 ) {
+                if ( id != 0 ) {
                     getContext().getContentResolver().notifyChange(Prefs.URI_DESCRIPTION, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ Prefs.URI_DESCRIPTION);
@@ -112,7 +112,7 @@ public class MyContentProvider extends ContentProvider {
                 cvExpense.put( Prefs.FIELD_DESC_ID, id );
                 cvExpense.put( Prefs.FIELD_DATE, values.getAsString(Prefs.FIELD_DATE) );
                 id = database.insert(Prefs.TABLE_EXPENSES, null, cvExpense);
-                if ( id > 0 ) {
+                if ( id != 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_EXPENSES, id);
 
                     if(Prefs.DEBUG) {
@@ -141,7 +141,7 @@ public class MyContentProvider extends ContentProvider {
                 Log.d(Prefs.LOG_TAG, "MyContentProvider URI_INCOMES_CODE FIELD_DESC="+ cvDescription.getAsString(Prefs.FIELD_DESC));
 
                 id = database.insert(Prefs.TABLE_DESCRIPTION, null, cvDescription);
-                if ( id > 0 ) {
+                if ( id != 0 ) {
                     getContext().getContentResolver().notifyChange(Prefs.URI_DESCRIPTION, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ Prefs.URI_DESCRIPTION);
@@ -153,7 +153,7 @@ public class MyContentProvider extends ContentProvider {
                 cvIncomes.put( Prefs.FIELD_DESC_ID, id );
                 cvIncomes.put( Prefs.FIELD_DATE, values.getAsString(Prefs.FIELD_DATE) );
                 id = database.insert(Prefs.TABLE_INCOMES, null, cvIncomes);
-                if ( id > 0 ) {
+                if ( id != 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_INCOMES, id);
                     getContext().getContentResolver().notifyChange(Prefs.URI_INCOMES, null);
                     Log.d(Prefs.LOG_TAG, "MyContentProvider insertUri = " + uri);
@@ -170,7 +170,7 @@ public class MyContentProvider extends ContentProvider {
             case URI_DESCRIPTION_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider URI_DESCRIPTION_CODE");
                 id = database.insert(Prefs.TABLE_DESCRIPTION, null, values);
-                if ( id > 0 ) {
+                if ( id != 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_DESCRIPTION, id);
                     getContext().getContentResolver().notifyChange(uri, null);
                 } else {
@@ -245,7 +245,7 @@ public class MyContentProvider extends ContentProvider {
 
                 updated = database.update(Prefs.TABLE_BALANCE, values, where, whereArgs);
 
-                if ( updated > 0 ) {
+                if ( updated != 0 ) {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update balance uri:"+ uri);
 
                     if (uri.equals(Prefs.URI_BALANCE))
@@ -272,7 +272,7 @@ public class MyContentProvider extends ContentProvider {
 
                 updated = database.update(Prefs.TABLE_EXPENSES, cvExpense, where, whereArgs);
 
-                if ( updated > 0 ) {
+                if ( updated != 0 ) {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update notifyChange updated = "+ updated);
                     getContext().getContentResolver().notifyChange(uri, null);
 
@@ -307,7 +307,7 @@ public class MyContentProvider extends ContentProvider {
 
                 updated = database.update(Prefs.TABLE_DESCRIPTION, values, where, whereArgs);
 
-                if ( updated > 0 ) {
+                if ( updated != 0 ) {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update desc uri:"+ uri);
 
 

@@ -11,7 +11,10 @@
     android:rowCount="2"
     android:orientation="horizontal"
     android:clipToPadding="true"
-    android:clipChildren="true">
+    android:clipChildren="true"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    >
 
 
     <TextView

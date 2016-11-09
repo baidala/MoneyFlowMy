@@ -12,6 +12,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -90,7 +93,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateView observer = "+ observer);
 
 
-
+        setHasOptionsMenu(true);
 
         getActivity().getSupportLoaderManager().initLoader(CASHFLOW_LOADER_ID, null, this);
 
@@ -136,6 +139,31 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLoaderReset(Loader<HashMap<String, String>> loader) {
         if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onLoaderReset");
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateOptionsMenu");
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_refresh:
+                getActivity().getSupportLoaderManager().restartLoader(CASHFLOW_LOADER_ID, null, this);
+
+                //Toast.makeText(this, "Click on expency", Toast.LENGTH_SHORT).show();
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected");
+                break;
+        }
+        return true;
+    }
+
 
 
 

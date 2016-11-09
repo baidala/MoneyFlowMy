@@ -70,25 +70,7 @@ public class DashboardActivity extends AppCompatActivity implements ViewPager.On
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.main, menu);
-        //Log.d(Prefs.LOG_TAG, "DashboardActivity onCreateOptionsMenu");
-        return false;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_expenses:
-                AddNewExpensesDialog addNewExpencyDialog = new AddNewExpensesDialog();
-                addNewExpencyDialog.show(getSupportFragmentManager(), "addExpense");
-                //Toast.makeText(this, "Click on expency", Toast.LENGTH_SHORT).show();
-                //Log.d(Prefs.LOG_TAG, "DashboardActivity onOptionsItemSelected");
-                break;
-        }
-        return true;
-    }
 
     // вывод в лог данных из курсора
     public void logCursor(Cursor c) {

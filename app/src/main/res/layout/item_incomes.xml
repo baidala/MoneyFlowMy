@@ -1,37 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:columnCount="4"
+    android:rowCount="2"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name"
-        android:id="@+id/tvNameItemIncomes"
-        android:layout_weight="1"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Summa"
-        android:id="@+id/tvSummaItemIncomes"
-        android:layout_weight="1"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"/>
+    android:clipToPadding="true"
+    android:clipChildren="true"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp">
 
 
+<TextView
+    android:id="@+id/tvNameItemIncomes"
+    android:text="Categoryhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+    android:textSize="22sp"
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DD-MM-YYYY"
-        android:id="@+id/tvDateItemIncomes"
-        android:layout_weight="1"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"/>
+    android:elegantTextHeight="true"
+    android:textStyle="normal"
+    android:textColor="@android:color/black"
+    android:paddingRight="2dp"
+    android:paddingLeft="2dp"
+    android:layout_columnSpan="2"
+    android:layout_column="0"
+    android:layout_row="0"
+    android:layout_height="wrap_content"
+    android:layout_gravity="fill"
+    android:lines="2"
+    android:maxLines="3"
+    android:layout_width="0dp" />
+<Space />
+
+<TextView
+    android:id="@+id/tvSummaItemIncomes"
+    android:text="Summa"
+    android:textAlignment="gravity"
+    android:textSize="22sp"
+    android:textColor="@android:color/black"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:layout_column="3"
+    android:gravity="right"
+    android:layout_gravity="right" />
 
 
-</LinearLayout>
+<TextView
+    android:id="@+id/tvDescItemIncomes"
+    android:text="Category"
+    android:layout_gravity="fill_horizontal|start"
+    android:elegantTextHeight="true"
+    android:layout_row="1"
+    android:layout_column="0"
+    android:layout_columnSpan="3"
+    android:textColor="@android:color/darker_gray" />
+
+<TextView
+    android:id="@+id/tvDateItemIncomes"
+    android:text="DD-MM-YYYY"
+    android:layout_row="1"
+    android:layout_column="3"
+    android:textColor="@android:color/darker_gray" />
+
+
+</GridLayout>
