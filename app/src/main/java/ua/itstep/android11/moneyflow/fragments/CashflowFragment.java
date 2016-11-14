@@ -169,7 +169,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
     private static class HashMapLoader extends Loader<HashMap<String, String>> {
 
-        public HashMapLoader( Context context ) {
+        HashMapLoader( Context context ) {
             super(context);
             if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader() ");
 
@@ -188,7 +188,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
             }
 
             loadData();
-            //loadData(Prefs.URI_INCOMES);
+
 
 
         }
@@ -226,7 +226,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
 
-        private void reloadData(Uri uriIncomes) {
+        private void recalcData(Uri uriIncomes) {
             Cursor cursor = getContext().getContentResolver().query(uriIncomes, new String[]{Prefs.FIELD_SUMMA}, null, null, null);
             String key = uriIncomes.getLastPathSegment();
 

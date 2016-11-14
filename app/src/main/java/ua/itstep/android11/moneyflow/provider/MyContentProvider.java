@@ -26,6 +26,7 @@ public class MyContentProvider extends ContentProvider {
     public static final int URI_EXPENSES_CODE = 1;
     public static final int URI_INCOMES_CODE = 2;
     public static final int URI_DESCRIPTION_CODE = 3;
+    public static final int URI_CATEGORY_CODE = 4;
 
     static {
         uriMatcher.addURI(Prefs.URI_BALANCE_AUTHORITIES,
@@ -40,6 +41,9 @@ public class MyContentProvider extends ContentProvider {
         uriMatcher.addURI(Prefs.URI_DESCRIPTION_AUTHORITIES,
                 Prefs.URI_DESCRIPTION_TYPE,
                 URI_DESCRIPTION_CODE);
+        uriMatcher.addURI(Prefs.URI_CATEGORY_AUTHORITIES,
+                Prefs.URI_CATEGORY_TYPE,
+                URI_CATEGORY_CODE);
     }
 
     public MyContentProvider() {
@@ -223,6 +227,12 @@ public class MyContentProvider extends ContentProvider {
                 cursor = database.query(Prefs.TABLE_DESCRIPTION, projection,
                         selection, selectionArgs, null, null, sortOrder);
                 Log.d(Prefs.LOG_TAG, "MyContentProvider query URI_DESCRIPTION_CODE -2");
+                break;
+
+            case URI_CATEGORY_CODE:
+                cursor = database.query(Prefs.TABLE_CATEGORY, projection,
+                        selection, selectionArgs, null, null, sortOrder);
+                Log.d(Prefs.LOG_TAG, "MyContentProvider query URI_CATEGORY_CODE count - "+cursor.getCount());
                 break;
         }
         return cursor;

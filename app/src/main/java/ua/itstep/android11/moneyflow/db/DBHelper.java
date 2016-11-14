@@ -34,6 +34,12 @@ public class DBHelper extends SQLiteOpenHelper {
             Prefs.TABLE_BALANCE, Prefs.FIELD_ID, Prefs.FIELD_SUMMA_EXPENSES, Prefs.FIELD_SUMMA_INCOMES);
     private static final String CREATE_TABLE_DESCRIPTION = String.format("create table %s (%s integer primary key autoincrement, %s text);",
             Prefs.TABLE_DESCRIPTION, Prefs.FIELD_ID, Prefs.FIELD_DESC);
+    private static final String CREATE_TABLE_CATEGORY = String.format("create table %s (%s integer primary key autoincrement, %s text);",
+            Prefs.TABLE_CATEGORY, Prefs.FIELD_ID, Prefs.FIELD_CATEGORY);
+
+    private static final String INSERT_CATEGORY_FOOD = String.format("insert into %s values(1,'food');", Prefs.TABLE_CATEGORY);
+    private static final String INSERT_CATEGORY_ELECTR = String.format("insert into %s values(2,'electric');", Prefs.TABLE_CATEGORY);
+    private static final String INSERT_CATEGORY_WATER = String.format("insert into %s values(3,'water');", Prefs.TABLE_CATEGORY);
 
 
     public DBHelper(Context context, int version) {
@@ -48,6 +54,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_INCOMES);
         db.execSQL(CREATE_TABLE_BALANCE);
         db.execSQL(CREATE_TABLE_DESCRIPTION);
+        db.execSQL(CREATE_TABLE_CATEGORY);
+
+        db.execSQL(INSERT_CATEGORY_FOOD);
+        db.execSQL(INSERT_CATEGORY_ELECTR);
+        db.execSQL(INSERT_CATEGORY_WATER);
 
         Log.d(Prefs.LOG_TAG, "DBHelper  onCreate ");
 
@@ -61,11 +72,13 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("drop table " + Prefs.TABLE_INCOMES);
         db.execSQL("drop table " + Prefs.TABLE_DESCRIPTION);
         db.execSQL("drop table " + Prefs.TABLE_BALANCE);
+        db.execSQL("drop table " + Prefs.TABLE_CATEGORY);
 
         db.execSQL(CREATE_TABLE_EXPENSES);
         db.execSQL(CREATE_TABLE_INCOMES);
         db.execSQL(CREATE_TABLE_BALANCE);
         db.execSQL(CREATE_TABLE_DESCRIPTION);
+        db.execSQL(CREATE_TABLE_CATEGORY);
 
 
     }

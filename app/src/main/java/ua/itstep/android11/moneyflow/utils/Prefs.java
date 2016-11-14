@@ -43,6 +43,10 @@ public class Prefs {
     public static final String FIELD_SUMMA_EXPENSES = "summa_expenses";
     public static final String FIELD_SUMMA_INCOMES = "summa_incomes";
 
+    //category(_id, category)
+    public static final String TABLE_CATEGORY = "category";
+    public static final String FIELD_CATEGORY = "category";
+
 
 
 
@@ -65,6 +69,10 @@ public class Prefs {
     public static final String URI_BALANCE_TYPE = "balance";
     public static final Uri    URI_BALANCE = Uri.parse("content://" + URI_BALANCE_AUTHORITIES + "/" + URI_BALANCE_TYPE);
 
+    public static final String URI_CATEGORY_AUTHORITIES = "ua.itstep.android11.moneyflow.provider";
+    public static final String URI_CATEGORY_TYPE = "category";
+    public static final Uri    URI_CATEGORY = Uri.parse("content://" + URI_CATEGORY_AUTHORITIES + "/" + URI_CATEGORY_TYPE);
+
     public static final String CURRENT_MONTH = "current";
 
     public static final String QUERY = "SELECT * FROM expenses LEFT JOIN description ON expenses.desc_id = description._id;";
@@ -79,4 +87,5 @@ public class Prefs {
 
     public static final int EXPENSES = 1;
     public static final int INCOMES = 2;
+
 }

@@ -3,16 +3,29 @@ package ua.itstep.android11.moneyflow.dialogs;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,11 +36,14 @@ import ua.itstep.android11.moneyflow.utils.Prefs;
 /**
  * Created by Test on 16.05.2016.
  */
-public class ChangeExpensesDialog extends DialogFragment {
+public class ChangeExpensesDialog extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     EditText etSumma;
     AutoCompleteTextView acNameOfExpense;
+    Spinner spinner;
+    SimpleCursorAdapter adapter;
     long id;
     double summa_old;
+    private  static  final int EXPENSES_LOADER_ID = 4;
 
 
 
@@ -40,6 +56,23 @@ public class ChangeExpensesDialog extends DialogFragment {
         etSumma = (EditText) view.findViewById(R.id.etSumma);
         acNameOfExpense = (AutoCompleteTextView) view.findViewById(R.id.acNameOfExpense);
         //TODO set adapter for AutocompliteTextView
+
+
+        String[] from = new String[] {Prefs.FIELD_CATEGORY};
+        int[] to = new int[] {android.R.id.text1};
+
+        adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
+                android.R.layout.simple_spinner_item, // R.layout.spinner_item,
+                null, from, to,
+                CursorAdapter.NO_SELECTION);
+
+        // adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        spinner = (Spinner)view.findViewById(R.id.spinner);
+        spinner.setAdapter(adapter);
+
 
         etSumma.setText(getArguments().getString(Prefs.FIELD_SUMMA_EXPENSES));
         acNameOfExpense.setText(getArguments().getString(Prefs.FIELD_DESC));
@@ -63,6 +96,9 @@ public class ChangeExpensesDialog extends DialogFragment {
                         dismiss();
                     }
                 });
+
+        getActivity().getSupportLoaderManager().initLoader(EXPENSES_LOADER_ID, null, this);
+
         return builder.create();
     }
 
@@ -97,4 +133,91 @@ public class ChangeExpensesDialog extends DialogFragment {
 
 
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog onCreateLoader ");
+
+        if (id == EXPENSES_LOADER_ID) {
+
+            return new ExpensesDialogCursorLoader(getActivity());
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog onLoadFinished " +cursor.getCount() );
+
+        switch (loader.getId()) {
+            case EXPENSES_LOADER_ID:
+                adapter.swapCursor(cursor);
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog onLoadFinished  LOADER_ID");
+                break;
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog onLoaderReset");
+
+        adapter.swapCursor(null);
+    }
+
+
+
+    private static class ExpensesDialogCursorLoader extends CursorLoader {
+
+
+        ExpensesDialogCursorLoader( Context context ) {
+
+            super(context, Prefs.URI_CATEGORY,
+                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_CATEGORY},
+                    null, null, null);
+
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog ExpensesDialogCursorLoader() ");
+
+
+        }
+
+        @Override
+        public Cursor loadInBackground() {
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog ExpensesCursorLoader loadInBackground");
+
+            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_CATEGORY, new String[]{Prefs.FIELD_ID, Prefs.FIELD_CATEGORY}, null, null, null);
+
+            //if(Prefs.DEBUG) logCursor(cursor);
+            if (cursor != null) {
+                if (Prefs.DEBUG)
+                    Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog ExpensesDialogCursorLoader loadInBackground count - " + cursor.getCount());
+            } else {
+                Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog  loadInBackground - Cursor is NULL");
+            }
+
+            return cursor;
+        }
+
+        // вывод в лог данных из курсора
+        private void logCursor(Cursor c) {
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    String str;
+                    do {
+                        str = "";
+                        for (String cn : c.getColumnNames()) {
+                            str = str.concat(cn + " = " + c.getString(c.getColumnIndex(cn)) + "; ");
+                        }
+                        Log.d(Prefs.LOG_TAG, str);
+                    } while (c.moveToNext());
+                }
+            } else {
+                Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog  logCursor - Cursor is null");
+            }
+        }
+
+
+    }
+
+
+
 }
