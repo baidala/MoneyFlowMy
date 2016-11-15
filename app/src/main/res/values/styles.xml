@@ -6,15 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="spinnerItemStyle">@style/AppSpinnerItem</item>
+        <item name="android:spinnerItemStyle">@style/AppSpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/AppSpinnerItem.DropDownItem</item>
 
     </style>
 
 
 
-
-    <style name="AppSpinnerItem" >
+    <style name="AppSpinnerItem" parent="@android:style/TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:background">@android:color/background_light</item>
     </style>

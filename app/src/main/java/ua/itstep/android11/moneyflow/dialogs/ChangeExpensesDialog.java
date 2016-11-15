@@ -62,12 +62,12 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
         int[] to = new int[] {android.R.id.text1};
 
         adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item, // R.layout.spinner_item,
+                R.layout.spinner_item,
                 null, from, to,
                 CursorAdapter.NO_SELECTION);
 
-        // adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
 
 
         spinner = (Spinner)view.findViewById(R.id.spinner);
