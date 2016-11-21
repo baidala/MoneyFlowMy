@@ -115,6 +115,7 @@ public class MyContentProvider extends ContentProvider {
                 cvExpense.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
                 cvExpense.put( Prefs.FIELD_DESC_ID, id );
                 cvExpense.put( Prefs.FIELD_DATE, values.getAsString(Prefs.FIELD_DATE) );
+                cvExpense.put( Prefs.FIELD_CATG_ID, values.getAsLong(Prefs.FIELD_CATG_ID) );
                 id = database.insert(Prefs.TABLE_EXPENSES, null, cvExpense);
                 if ( id != 0 ) {
                     insertUri = ContentUris.withAppendedId(Prefs.URI_EXPENSES, id);
