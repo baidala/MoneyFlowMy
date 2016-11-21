@@ -26,8 +26,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //balance(id, summa)
 
-    private static final String CREATE_TABLE_EXPENSES = String.format("create table %s (%s integer primary key autoincrement, %s real, %s text, %s integer);",
-            Prefs.TABLE_EXPENSES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID);
+    private static final String CREATE_TABLE_EXPENSES = String.format("create table %s (%s integer primary key autoincrement, %s real, %s text, %s integer, %s integer);",
+            Prefs.TABLE_EXPENSES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID, Prefs.FIELD_CATG_ID);
     private static final String CREATE_TABLE_INCOMES = String.format("create table %s (%s integer primary key autoincrement, %s real, %s text, %s integer);",
             Prefs.TABLE_INCOMES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID);
     private static final String CREATE_TABLE_BALANCE = String.format("create table %s (%s integer primary key autoincrement, %s real, %s real);",

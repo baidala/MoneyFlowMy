@@ -26,6 +26,10 @@ public class Prefs {
     public static final String TABLE_DESCRIPTION = "description";
     public static final String FIELD_DESC = "description";
 
+    //category(_id, category)
+    public static final String TABLE_CATEGORY = "category";
+    public static final String FIELD_CATEGORY = "category";
+
     //incomes(id, summa, date, desc_id)
     public static final String TABLE_INCOMES = "incomes";
     public static final String FIELD_ID = "_id";
@@ -34,18 +38,18 @@ public class Prefs {
     public static final String FIELD_DESC_ID = "desc_id";
     public static final String TABLE_INCOMES_JOINED = TABLE_INCOMES + " LEFT JOIN " + TABLE_DESCRIPTION + " ON " + TABLE_INCOMES+"."+FIELD_DESC_ID + " = " + TABLE_DESCRIPTION+"."+FIELD_ID;
 
-    //expenses(id, summa, date, desc_id)
+    //expenses(id, summa, date, desc_id, catg_id)
     public static final String TABLE_EXPENSES = "expenses";
-    public static final String TABLE_EXPENSES_JOINED = TABLE_EXPENSES + " LEFT JOIN " + TABLE_DESCRIPTION + " ON " + TABLE_EXPENSES+"."+FIELD_DESC_ID + " = " + TABLE_DESCRIPTION+"."+FIELD_ID;
+    public static final String FIELD_CATG_ID = "catg_id";
+    public static final String TABLE_EXPENSES_JOINED = TABLE_EXPENSES + " LEFT JOIN " + TABLE_DESCRIPTION + " ON " + TABLE_EXPENSES+"."+FIELD_DESC_ID + " = " + TABLE_DESCRIPTION+"."+FIELD_ID  + " LEFT JOIN " + TABLE_CATEGORY + " ON " + TABLE_EXPENSES+"."+FIELD_CATG_ID + " = " + TABLE_CATEGORY+"."+FIELD_ID;
+
 
     //balance(id, summa_expenses, summa_incomes)
     public static final String TABLE_BALANCE = "balance";
     public static final String FIELD_SUMMA_EXPENSES = "summa_expenses";
     public static final String FIELD_SUMMA_INCOMES = "summa_incomes";
 
-    //category(_id, category)
-    public static final String TABLE_CATEGORY = "category";
-    public static final String FIELD_CATEGORY = "category";
+
 
 
 
@@ -87,5 +91,6 @@ public class Prefs {
 
     public static final int EXPENSES = 1;
     public static final int INCOMES = 2;
+
 
 }

@@ -75,8 +75,8 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
 
         View view =  inflater.inflate( R.layout.fragment_expenses, container , false);
 
-        String[] from = new String[] {Prefs.FIELD_SUMMA, Prefs.FIELD_DESC, Prefs.FIELD_DATE};
-        int[] to = new int[] {R.id.tvSummaItemExpenses, R.id.tvNameItemExpenses, R.id.tvDateItemExpenses};
+        String[] from = new String[] {Prefs.FIELD_SUMMA, Prefs.FIELD_DESC, Prefs.FIELD_DATE, Prefs.FIELD_CATEGORY};
+        int[] to = new int[] {R.id.tvSummaItemExpenses, R.id.tvNameItemExpenses, R.id.tvDateItemExpenses, R.id.tvCatgItemExpenses};
 
         scAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
                 R.layout.item_expenses_adapter,
@@ -186,7 +186,7 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
         ExpensesCursorLoader( Context context ) {
 
             super(context, Prefs.URI_EXPENSES,
-                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DESC, Prefs.FIELD_DATE},
+                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DESC, Prefs.FIELD_DATE, Prefs.FIELD_CATEGORY},
                     null, null, null);
 
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment ExpensesCursorLoader() ");
@@ -198,7 +198,7 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
         public Cursor loadInBackground() {
             //if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment ExpensesCursorLoader loadInBackground");
 
-            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_EXPENSES, new String[]{Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_DATE}, null, null, null);
+            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_EXPENSES, new String[]{Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_DATE, Prefs.TABLE_CATEGORY+"."+Prefs.FIELD_CATEGORY}, null, null, null);
 
             //if(Prefs.DEBUG) logCursor(cursor);
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment ExpensesCursorLoader loadInBackground count - " +cursor.getCount());

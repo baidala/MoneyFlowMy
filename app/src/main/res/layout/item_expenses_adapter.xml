@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/tvNameItemExpenses"
-        android:text="Categoryhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+        android:text="Deschhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
         android:textSize="22sp"
 
         android:elegantTextHeight="true"
@@ -51,7 +51,7 @@
 
 
     <TextView
-        android:id="@+id/tvDescItemExpenses"
+        android:id="@+id/tvCatgItemExpenses"
         android:text="Category"
         android:layout_gravity="fill_horizontal|start"
         android:elegantTextHeight="true"

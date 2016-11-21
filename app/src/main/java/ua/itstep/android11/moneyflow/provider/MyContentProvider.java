@@ -279,6 +279,7 @@ public class MyContentProvider extends ContentProvider {
 
                 ContentValues cvExpense = new ContentValues();
                 cvExpense.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvExpense.put( Prefs.FIELD_CATG_ID, values.getAsLong(Prefs.FIELD_CATG_ID) );
 
                 updated = database.update(Prefs.TABLE_EXPENSES, cvExpense, where, whereArgs);
 
@@ -303,8 +304,6 @@ public class MyContentProvider extends ContentProvider {
                 cvDescription.put( Prefs.FIELD_DESC, values.getAsString(Prefs.FIELD_DESC) );
                 updateDescription( cvDescription, where, whereArgs );
 
-
-
                 break;
 
             case URI_INCOMES_CODE:
@@ -316,6 +315,28 @@ public class MyContentProvider extends ContentProvider {
                 Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_DESCRIPTION_CODE");
 
                 updated = database.update(Prefs.TABLE_DESCRIPTION, values, where, whereArgs);
+
+                if ( updated != 0 ) {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update desc uri:"+ uri);
+
+
+
+
+                    getContext().getContentResolver().notifyChange(uri, null);
+
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update notifyChange updated = "+ updated);
+
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
+                    throw new SQLException("Failed to update row in "+ uri);
+                }
+
+                break;
+
+            case URI_CATEGORY_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_CATEGORY_CODE");
+
+                updated = database.update(Prefs.TABLE_CATEGORY, values, where, whereArgs);
 
                 if ( updated != 0 ) {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update desc uri:"+ uri);
