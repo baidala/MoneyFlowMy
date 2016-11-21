@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <AutoCompleteTextView
         android:id="@+id/acNameOfExpense"
@@ -21,6 +21,14 @@
         android:layout_weight="1"
         android:inputType="numberDecimal"
         android:hint="@string/hint_volume"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_weight="1"
+
+        />
 
 
 </LinearLayout>
