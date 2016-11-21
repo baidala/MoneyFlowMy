@@ -319,9 +319,6 @@ public class MyContentProvider extends ContentProvider {
                 if ( updated != 0 ) {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update desc uri:"+ uri);
 
-
-
-
                     getContext().getContentResolver().notifyChange(uri, null);
 
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update notifyChange updated = "+ updated);
@@ -341,9 +338,6 @@ public class MyContentProvider extends ContentProvider {
                 if ( updated != 0 ) {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update desc uri:"+ uri);
 
-
-
-
                     getContext().getContentResolver().notifyChange(uri, null);
 
                     Log.d(Prefs.LOG_TAG, "MyContentProvider update notifyChange updated = "+ updated);
@@ -358,10 +352,104 @@ public class MyContentProvider extends ContentProvider {
         return updated;
     }
 
+
+
+
+    @Override
+    public int delete(Uri uri, String whereClause, String[] whereArgs) {
+        // TODO Implement this to handle requests to delete one or more rows.
+        Log.d(Prefs.LOG_TAG, "MyContentProvider delete");
+
+        int deleted = 0;
+
+        database = dbHelper.getWritableDatabase();
+
+        switch (uriMatcher.match(uri)) {
+            case URI_BALANCE_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_BALANCE_CODE");
+
+
+                break;
+
+            case URI_EXPENSES_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_EXPENSES_CODE");
+                double summa_old = 0;
+
+                Cursor cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA}, whereClause, whereArgs, null, null, null);
+                if ( cursor.moveToFirst() ) {
+                    summa_old = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
+                }
+                cursor.close();
+
+
+                deleted = database.delete(Prefs.TABLE_EXPENSES, whereClause, whereArgs);
+
+                if ( deleted != 0 ) {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider delete EXPENSES uri:"+ uri);
+
+                    getContext().getContentResolver().notifyChange(uri, null);
+
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider delete notifyChange deleted = "+ deleted);
+
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to delete row in "+ uri);
+                    throw new SQLException("Failed to delete row in "+ uri);
+                }
+
+                summa_old *= -1;
+
+                ContentValues cvBalance = new ContentValues();
+                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, summa_old );
+                updateBalance( cvBalance );
+
+                break;
+
+            case URI_INCOMES_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_INCOMES_CODE");
+                deleted = database.delete(Prefs.TABLE_INCOMES, whereClause, whereArgs);
+
+                if ( deleted != 0 ) {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider delete INCOMES uri:"+ uri);
+
+                    getContext().getContentResolver().notifyChange(uri, null);
+
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider delete notifyChange deleted = "+ deleted);
+
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to delete row in "+ uri);
+                    throw new SQLException("Failed to delete row in "+ uri);
+                }
+                break;
+
+            case URI_DESCRIPTION_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_DESCRIPTION_CODE");
+
+
+                break;
+
+            case URI_CATEGORY_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_CATEGORY_CODE");
+
+
+                break;
+        }
+        return deleted;
+
+
+    }
+
+    @Override
+    public String getType(Uri uri) {
+        // TODO: Implement this to handle requests for the MIME type of the data
+        // at the given URI.
+        Log.d(Prefs.LOG_TAG, "MyContentProvider getType");
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+
     private void updateDescription(ContentValues cvDescription, String where, String[] whereArgs) {
         Cursor cursor;
         long id;
-
 
         cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_DESC_ID}, where, whereArgs, null, null, null);
         if ( cursor.moveToFirst() ) {
@@ -401,8 +489,6 @@ public class MyContentProvider extends ContentProvider {
                 insert(Prefs.URI_BALANCE, cvBalance);
             }
 
-
-
         } else {
             summa = cvBalance.getAsDouble(Prefs.FIELD_SUMMA_INCOMES);
             cursor = database.query(Prefs.TABLE_BALANCE, new String[]{Prefs.FIELD_SUMMA_INCOMES}, null, null, null, null, null);
@@ -431,19 +517,5 @@ public class MyContentProvider extends ContentProvider {
     }
 
 
-    @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // TODO Implement this to handle requests to delete one or more rows.
-        Log.d(Prefs.LOG_TAG, "MyContentProvider delete");
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
-    public String getType(Uri uri) {
-        // TODO: Implement this to handle requests for the MIME type of the data
-        // at the given URI.
-        Log.d(Prefs.LOG_TAG, "MyContentProvider getType");
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
 }

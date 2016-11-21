@@ -58,6 +58,8 @@ public class AddNewExpensesDialog extends DialogFragment {
         return builder.create();
     }
 
+
+
     private void addNewExpense() {
 
         Log.d(Prefs.LOG_TAG, "AddNewExpensesDialog addNewExpense: " + etSumma.getText().toString());

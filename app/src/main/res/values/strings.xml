@@ -29,6 +29,7 @@
     <string name="title_add_new_income_dialog">Add income</string>
     <string name="message_change_expense_dialog">Change spend</string>
     <string name="title_change_expense_dialog">Change expense</string>
+    <string name="delete_button_dialog">Delete</string>
 
 
 </resources>

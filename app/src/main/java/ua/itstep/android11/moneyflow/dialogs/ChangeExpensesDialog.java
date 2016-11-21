@@ -145,6 +145,12 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
                         changeExpense();
                     }
                 })
+                .setNeutralButton(R.string.delete_button_dialog, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteExpense();
+                    }
+                })
                 .setNegativeButton(R.string.negativ_button_dialog, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -155,6 +161,25 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
 
 
         return builder.create();
+    }
+
+    private void deleteExpense() {
+        Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog deleteExpense summa: " + etSumma.getText().toString());
+        ContentResolver cr = getContext().getContentResolver();
+
+
+        String _id = Long.toString(id);
+        String whereClause = Prefs.FIELD_ID + " = CAST (? AS INTEGER)";
+        String[] whereArgs = {_id};
+
+        int deletedRows = cr.delete(Prefs.URI_EXPENSES, whereClause, whereArgs);
+        Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog deleteExpense deletedRows: " + deletedRows);
+
+        if (deletedRows == 0) Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog deleteExpense deletedRows == 0 !!!");
+
+
+
+
     }
 
     private void changeExpense() {
