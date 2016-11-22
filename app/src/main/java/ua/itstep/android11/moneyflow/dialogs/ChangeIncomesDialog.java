@@ -128,8 +128,8 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
 
 
         builder.setView(view)
-                .setMessage(R.string.message_change_expense_dialog)
-                .setTitle(R.string.title_change_expense_dialog)
+                //.setMessage(R.string.message_change_incomes_dialog)
+                .setTitle(R.string.title_change_incomes_dialog)
                 .setPositiveButton(R.string.positive_button_dialog, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -178,7 +178,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
         Log.d(Prefs.LOG_TAG, "ChangeIncomesDialog changeIncomes summa: " + etSumma.getText().toString());
 
         ContentResolver cr = getContext().getContentResolver();
-        ContentValues cvExpense = new ContentValues();
+        ContentValues cvIncomes = new ContentValues();
 
 
         double summa = Double.parseDouble(etSumma.getText().toString());
@@ -189,17 +189,17 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
         //String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         //TODO
 
-        cvExpense.put(Prefs.FIELD_SUMMA, summa);
-        cvExpense.put(Prefs.FIELD_SUMMA_INCOMES, summa_old);
-        cvExpense.put(Prefs.FIELD_DESC, name);
-        cvExpense.put(Prefs.FIELD_CATG_ID, catgId);
-        //cvExpense.put(Prefs.FIELD_DATE, date);
+        cvIncomes.put(Prefs.FIELD_SUMMA, summa);
+        cvIncomes.put(Prefs.FIELD_SUMMA_INCOMES, summa_old);
+        cvIncomes.put(Prefs.FIELD_DESC, name);
+        cvIncomes.put(Prefs.FIELD_CATG_ID, catgId);
+        //cvIncomes.put(Prefs.FIELD_DATE, date);
 
         String _id = Long.toString(id);
         String whereClause = Prefs.FIELD_ID + " = CAST (? AS INTEGER)";
         String[] whereArgs = {_id};
 
-        int updatedRows = cr.update(Prefs.URI_INCOMES, cvExpense, whereClause, whereArgs);
+        int updatedRows = cr.update(Prefs.URI_INCOMES, cvIncomes, whereClause, whereArgs);
         Log.d(Prefs.LOG_TAG, "ChangeIncomesDialog changeIncomes updatedRows: " + updatedRows);
 
         if (updatedRows == 0) Log.d(Prefs.LOG_TAG, "ChangeIncomesDialog changeIncomes updated == 0 !!!");
@@ -230,7 +230,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
 
 
                 if(Prefs.DEBUG) {
-                    //Log.d(Prefs.LOG_TAG, "ChangeExpensesDialog onLoadFinished position: " + position);
+                    //Log.d(Prefs.LOG_TAG, "ChangeIncomesDialog onLoadFinished position: " + position);
                     Log.d(Prefs.LOG_TAG, "ChangeIncomesDialog onLoadFinished  LOADER_ID");
                 }
                 break;

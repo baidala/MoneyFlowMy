@@ -30,6 +30,7 @@
     <string name="message_change_expense_dialog">Change spend</string>
     <string name="title_change_expense_dialog">Change expense</string>
     <string name="delete_button_dialog">Delete</string>
+    <string name="title_change_incomes_dialog">Change income</string>
 
 
 </resources>

@@ -440,7 +440,7 @@ public class MyContentProvider extends ContentProvider {
                 Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_INCOMES_CODE");
 
                 summa_old = 0;
-                cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA}, whereClause, whereArgs, null, null, null);
+                cursor = database.query(Prefs.TABLE_INCOMES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA}, whereClause, whereArgs, null, null, null);
                 if ( cursor.moveToFirst() ) {
                     summa_old = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
                 }
