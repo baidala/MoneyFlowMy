@@ -22,12 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-
+import android.widget.TextView;
 
 
 import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.utils.Prefs;
+import ua.itstep.android11.moneyflow.dialogs.ChangeIncomesDialog;
 
 /**
  * Created by oracle on 6/3/16.
@@ -69,7 +69,6 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
         observerIncomes = new ContentObserver(new Handler()) {
 
-
             @Override
             public void onChange(boolean selfChange, Uri uri) {
                 super.onChange(selfChange, uri);
@@ -95,6 +94,22 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateView onItemClick:" + position);
+
+                TextView edSumma = (TextView) view.findViewById(R.id.tvSummaItemExpenses);
+                String summa = edSumma.getText().toString();
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment onCreateView onItemClick summa:" + summa);
+
+                TextView edNameOfExpense = (TextView) view.findViewById(R.id.tvNameItemExpenses);
+                String desc = edNameOfExpense.getText().toString();
+
+                ChangeIncomesDialog expenseDialog = new ChangeIncomesDialog();
+                Bundle args = new Bundle();
+                args.putString(Prefs.FIELD_SUMMA_EXPENSES, summa);
+                args.putString(Prefs.FIELD_DESC, desc);
+                args.putLong(Prefs.FIELD_ID, id);
+
+                expenseDialog.setArguments(args);
+                expenseDialog.show(getFragmentManager(), "CH");
             }
         });
 

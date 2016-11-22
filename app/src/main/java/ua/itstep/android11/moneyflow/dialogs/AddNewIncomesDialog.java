@@ -41,7 +41,7 @@ public class AddNewIncomesDialog extends DialogFragment {
         //TODO set adapter for AutocompliteTextView
 
         builder.setView(view)
-                .setMessage(R.string.message_add_new_income_dialog)
+                //.setMessage(R.string.message_add_new_income_dialog)
                 .setTitle(R.string.title_add_new_income_dialog)
                 .setPositiveButton(R.string.positive_button_dialog, new DialogInterface.OnClickListener() {
                     @Override

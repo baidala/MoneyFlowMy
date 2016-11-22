@@ -247,6 +247,8 @@ public class MyContentProvider extends ContentProvider {
 
         //long id = 0;
         int updated = 0;
+        ContentValues cvBalance;
+        ContentValues cvDescription;
 
         database = dbHelper.getWritableDatabase();
 
@@ -293,7 +295,7 @@ public class MyContentProvider extends ContentProvider {
                     throw new SQLException("Failed to update row in "+ uri);
                 }
 
-                ContentValues cvBalance = new ContentValues();
+                cvBalance = new ContentValues();
                 cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsDouble(Prefs.FIELD_SUMMA_EXPENSES) );
                 updateBalance( cvBalance );
 
@@ -301,7 +303,7 @@ public class MyContentProvider extends ContentProvider {
                 cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsDouble(Prefs.FIELD_SUMMA) );
                 updateBalance( cvBalance );
 
-                ContentValues cvDescription = new ContentValues();
+                cvDescription = new ContentValues();
                 cvDescription.put( Prefs.FIELD_DESC, values.getAsString(Prefs.FIELD_DESC) );
                 updateDescription( cvDescription, where, whereArgs );
 
@@ -309,6 +311,33 @@ public class MyContentProvider extends ContentProvider {
 
             case URI_INCOMES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_INCOMES_CODE");
+
+                ContentValues cvIncomes = new ContentValues();
+                cvIncomes.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvIncomes.put( Prefs.FIELD_CATG_ID, values.getAsLong(Prefs.FIELD_CATG_ID) );
+
+                updated = database.update(Prefs.TABLE_INCOMES, cvIncomes, where, whereArgs);
+
+                if ( updated != 0 ) {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider update notifyChange updated = "+ updated);
+                    getContext().getContentResolver().notifyChange(uri, null);
+
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
+                    throw new SQLException("Failed to update row in "+ uri);
+                }
+
+                cvBalance = new ContentValues();
+                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsDouble(Prefs.FIELD_SUMMA_INCOMES) );
+                updateBalance( cvBalance );
+
+                cvBalance.clear();
+                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                updateBalance( cvBalance );
+
+                cvDescription = new ContentValues();
+                cvDescription.put( Prefs.FIELD_DESC, values.getAsString(Prefs.FIELD_DESC) );
+                updateDescription( cvDescription, where, whereArgs );
 
                 break;
 
@@ -362,6 +391,8 @@ public class MyContentProvider extends ContentProvider {
         Log.d(Prefs.LOG_TAG, "MyContentProvider delete");
 
         int deleted = 0;
+        double summa_old = 0;
+        Cursor cursor;
 
         database = dbHelper.getWritableDatabase();
 
@@ -374,9 +405,9 @@ public class MyContentProvider extends ContentProvider {
 
             case URI_EXPENSES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_EXPENSES_CODE");
-                double summa_old = 0;
+                summa_old = 0;
 
-                Cursor cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA}, whereClause, whereArgs, null, null, null);
+                cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA}, whereClause, whereArgs, null, null, null);
                 if ( cursor.moveToFirst() ) {
                     summa_old = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
                 }
@@ -407,6 +438,14 @@ public class MyContentProvider extends ContentProvider {
 
             case URI_INCOMES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_INCOMES_CODE");
+
+                summa_old = 0;
+                cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA}, whereClause, whereArgs, null, null, null);
+                if ( cursor.moveToFirst() ) {
+                    summa_old = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
+                }
+                cursor.close();
+
                 deleted = database.delete(Prefs.TABLE_INCOMES, whereClause, whereArgs);
 
                 if ( deleted != 0 ) {
@@ -420,6 +459,13 @@ public class MyContentProvider extends ContentProvider {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to delete row in "+ uri);
                     throw new SQLException("Failed to delete row in "+ uri);
                 }
+
+                summa_old *= -1;
+
+                cvBalance = new ContentValues();
+                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, summa_old );
+                updateBalance( cvBalance );
+
                 break;
 
             case URI_DESCRIPTION_CODE:
