@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_menu_refresh"
         android:title="@string/item_menu_refresh_text"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/item_reCalc"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="@string/item_menu_refresh_text"
+        app:showAsAction="ifRoom" />
 </menu>

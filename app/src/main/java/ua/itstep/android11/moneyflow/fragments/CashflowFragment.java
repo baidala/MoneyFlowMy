@@ -1,8 +1,11 @@
 package ua.itstep.android11.moneyflow.fragments;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.UriMatcher;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +26,7 @@ import java.util.HashMap;
 
 import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.utils.Prefs;
+import ua.itstep.android11.moneyflow.views.Graphics;
 
 import static ua.itstep.android11.moneyflow.utils.Prefs.DEBUG;
 
@@ -35,11 +39,25 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     private TextView tvCashflowExpensesSumma;
     private TextView tvCashflowIncomes;
     private TextView tvCashflowIncomesSumma;
+    private Graphics graphics;
+
     private  static  final int CASHFLOW_LOADER_ID = 0;
 
+    public static final int URI_EXPENSES_CODE = 1;
+    public static final int URI_INCOMES_CODE = 2;
     public static HashMap<String, String> result;
 
     private ContentObserver observer;
+    private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    static {
+        uriMatcher.addURI(Prefs.URI_EXPENSES_AUTHORITIES,
+                Prefs.URI_EXPENSES_TYPE,
+                URI_EXPENSES_CODE);
+        uriMatcher.addURI(Prefs.URI_INCOMES_AUTHORITIES,
+                Prefs.URI_INCOMES_TYPE,
+                URI_INCOMES_CODE);
+    }
 
 
 
@@ -69,9 +87,11 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         tvCashflowExpensesSumma = (TextView)view.findViewById(R.id.tvCashflowSumma);
         tvCashflowIncomes = (TextView)view.findViewById(R.id.tvCashflowIncomes);
         tvCashflowIncomesSumma = (TextView)view.findViewById(R.id.tvCashflowIncomesSumma);
+        graphics = (Graphics) view.findViewById(R.id.vGraphics);
 
         tvCashflowExpenses.setText(Prefs.URI_EXPENSES_TYPE);
         tvCashflowIncomes.setText(Prefs.URI_INCOMES_TYPE);
+        graphics.setBackgroundColor(Color.RED);
 
 
 
@@ -133,6 +153,9 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 break;
         }
 
+        graphics.setValues(10, 100);
+
+
     }
 
     @Override
@@ -157,11 +180,81 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
             case R.id.item_refresh:
                 getActivity().getSupportLoaderManager().restartLoader(CASHFLOW_LOADER_ID, null, this);
 
-                //Toast.makeText(this, "Click on expency", Toast.LENGTH_SHORT).show();
-                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected");
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_refresh");
+                break;
+            case R.id.item_reCalc:
+                recalcData(Prefs.URI_INCOMES);
+                recalcData(Prefs.URI_EXPENSES);
+
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_reCalc");
                 break;
         }
         return true;
+    }
+
+    private void recalcData(Uri uriTable) {
+        ContentValues cvBalance;
+
+        Cursor cursor = getContext().getContentResolver().query(uriTable, new String[]{Prefs.FIELD_SUMMA}, null, null, null);
+        String key = uriTable.getLastPathSegment();
+
+        if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment recalcData: " + key);
+
+        if ( cursor != null) {
+            double summa = 0.0;
+            int updatedRows = 0;
+            cursor.moveToFirst();
+
+            if ( cursor.getCount() != 0 ) {
+
+                do {
+                    double value = 0;
+                    value = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
+                    summa += value;
+                    if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment recalcData value: " + summa);
+                } while (cursor.moveToNext());
+                //Log.d(Prefs.LOG_TAG, "ExpensesFragment HashMapLoader onStartLoading  " + String.valueOf(value));
+
+                cvBalance = new ContentValues();
+
+                switch (uriMatcher.match(uriTable)) {
+                    case URI_EXPENSES_CODE:
+                        cvBalance.put(Prefs.FIELD_SUMMA_EXPENSES, summa);
+                        Log.d(Prefs.LOG_TAG, "CashflowFragment recalcData SUMMA_EXPENSES: " + summa);
+                        break;
+
+                    case URI_INCOMES_CODE:
+                        cvBalance.put(Prefs.FIELD_SUMMA_INCOMES, summa);
+                        Log.d(Prefs.LOG_TAG, "CashflowFragment recalcData SUMMA_INCOMES: " + summa);
+                        break;
+                }
+
+
+                updatedRows = getContext().getContentResolver().update(Prefs.URI_BALANCE, cvBalance, null, null);
+                if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment recalcData updatedRows: " + updatedRows);
+
+            } else {
+                cvBalance = new ContentValues();
+
+                switch (uriMatcher.match(uriTable)) {
+                    case URI_EXPENSES_CODE:
+                        cvBalance.put(Prefs.FIELD_SUMMA_EXPENSES, summa);
+                        break;
+
+                    case URI_INCOMES_CODE:
+                        cvBalance.put(Prefs.FIELD_SUMMA_INCOMES, summa);
+                        break;
+                }
+
+                updatedRows = getContext().getContentResolver().update(Prefs.URI_BALANCE, cvBalance, null, null);
+                if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment recalcData cursor.getCount = 0  updatedRows: " + updatedRows);
+
+            }
+            cursor.close();
+
+        } else {
+            if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onStartLoading - Cursor is NULL");
+        }
     }
 
 
@@ -226,36 +319,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
 
-        private void recalcData(Uri uriIncomes) {
-            Cursor cursor = getContext().getContentResolver().query(uriIncomes, new String[]{Prefs.FIELD_SUMMA}, null, null, null);
-            String key = uriIncomes.getLastPathSegment();
 
-            if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  " + key);
-
-            if ( cursor != null) {
-                cursor.moveToFirst();
-
-                if ( cursor.getCount() != 0 ) {
-                    int value = 0;
-                    do {
-                        int temp = cursor.getInt(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
-                        value += temp;
-                        if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  " + String.valueOf(temp));
-                    } while (cursor.moveToNext());
-                    //Log.d(Prefs.LOG_TAG, "ExpensesFragment HashMapLoader onStartLoading  " + String.valueOf(value));
-                    result.put(key, String.valueOf(value));
-
-                } else {
-                    result.put(key, "0");
-                }
-
-                deliverResult(result);
-                cursor.close();
-
-            } else {
-                if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onStartLoading - Cursor is NULL");
-            }
-        }
 
 
     }

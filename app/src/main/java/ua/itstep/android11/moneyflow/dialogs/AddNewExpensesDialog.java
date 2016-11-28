@@ -107,14 +107,16 @@ public class AddNewExpensesDialog extends DialogFragment implements LoaderManage
 
 
     private void addNewExpense() {
-
+        double summa = 0;
         Log.d(Prefs.LOG_TAG, "AddNewExpensesDialog addNewExpense: " + etSumma.getText().toString());
 
         ContentResolver cr = getContext().getContentResolver();
         ContentValues cvExpense = new ContentValues();
 
+        try {
+            summa = Double.parseDouble(etSumma.getText().toString());
+        } catch (NumberFormatException ex){}
 
-        double summa = Double.parseDouble(etSumma.getText().toString());
         String name = acNameOfExpense.getText().toString();
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         String catgId = Long.toString(categoryId);

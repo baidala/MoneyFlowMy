@@ -255,6 +255,7 @@ public class MyContentProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case URI_BALANCE_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_BALANCE_CODE");
+                Log.d(Prefs.LOG_TAG, "MyContentProvider update balance values:"+ values.describeContents());
 
                 updated = database.update(Prefs.TABLE_BALANCE, values, where, whereArgs);
 

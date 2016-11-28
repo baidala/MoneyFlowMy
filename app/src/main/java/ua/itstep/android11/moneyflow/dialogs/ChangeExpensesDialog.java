@@ -42,10 +42,10 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
     AutoCompleteTextView acNameOfExpense;
     Spinner spinner;
     SimpleCursorAdapter adapter;
-    long id;
+    long id = 0;
     long categoryId = 0;
     int position = 0;
-    double summa_old;
+    double summa_old = 0;
     private  static  final int EXPENSES_LOADER_ID = 4;
 
 
@@ -101,7 +101,10 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
         acNameOfExpense.setText(getArguments().getString(Prefs.FIELD_DESC));
         id = getArguments().getLong(Prefs.FIELD_ID);
 
-        summa_old = Double.parseDouble(etSumma.getText().toString());
+        try {
+            summa_old = Double.parseDouble(etSumma.getText().toString());
+        } catch (NumberFormatException ex){}
+
         summa_old *= -1;
 
 

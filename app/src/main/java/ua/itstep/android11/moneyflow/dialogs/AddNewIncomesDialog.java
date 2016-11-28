@@ -59,13 +59,16 @@ public class AddNewIncomesDialog extends DialogFragment {
     }
 
     private void addNewIncome() {
-
+        double summa = 0;
         Log.d(Prefs.LOG_TAG, "AddNewIncomesDialog addNewIncome: " + etSumma.getText().toString());
 
         ContentResolver cr = getContext().getContentResolver();
         ContentValues cvIncome = new ContentValues();
 
-        double summa = Double.parseDouble(etSumma.getText().toString());
+        try {
+            summa = Double.parseDouble(etSumma.getText().toString());
+        } catch (NumberFormatException ex){}
+
         String name = acNameOfIncome.getText().toString();
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
