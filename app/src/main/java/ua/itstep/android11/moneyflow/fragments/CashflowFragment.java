@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -91,7 +93,23 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
         tvCashflowExpenses.setText(Prefs.URI_EXPENSES_TYPE);
         tvCashflowIncomes.setText(Prefs.URI_INCOMES_TYPE);
-        graphics.setBackgroundColor(Color.RED);
+
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        ViewGroup.LayoutParams layoutParams = graphics.getLayoutParams();
+
+        layoutParams.width = metrics.widthPixels / 3;
+        layoutParams.height = metrics.heightPixels / 2;
+
+
+
+        Log.d(Prefs.LOG_TAG,"layoutParams.width: " + layoutParams.width);
+        Log.d(Prefs.LOG_TAG,"layoutParams.height: " + layoutParams.height);
+
+
+
 
 
 
