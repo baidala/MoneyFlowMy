@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 
 /**
@@ -38,23 +39,24 @@ public class Graphics extends View {
 
 
 
-        float left = 0;
+        float left = canvas.getWidth()/10;;
         float top = 0;
-        float right = canvas.getWidth()/5; //TODO
+        float right = canvas.getWidth()/3;
         float bottom = canvas.getHeight();
         float width = right - left;
 
         Log.d(Prefs.LOG_TAG , "Graphics onDraw right: " +right);
         Log.d(Prefs.LOG_TAG , "Graphics onDraw bottom: " +bottom);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw width: " +width);
 
         float leftE = right + width;
         float rightE = leftE + width;
 
         paintI = new Paint();
-        paintI.setColor(Color.GREEN);
+        paintI.setARGB(255, 30, 207, 30);
 
         paintE = new Paint();
-        paintE.setColor(Color.BLUE);
+        paintE.setARGB(255, 53, 6, 171);
 
         RectF rectFIncomes = new RectF(left, top, right, bottom);
         RectF rectFExpenses = new RectF(leftE, top, rightE, bottom);
