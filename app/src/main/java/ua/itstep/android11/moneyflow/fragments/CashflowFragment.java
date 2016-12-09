@@ -42,6 +42,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     private TextView tvCashflowIncomes;
     private TextView tvCashflowIncomesSumma;
     private Graphics graphics;
+    private ViewGroup.LayoutParams layoutParams;
 
     private  static  final int CASHFLOW_LOADER_ID = 0;
 
@@ -98,7 +99,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        ViewGroup.LayoutParams layoutParams = graphics.getLayoutParams();
+        layoutParams = graphics.getLayoutParams();
 
         layoutParams.width = metrics.widthPixels / 3;
         layoutParams.height = metrics.heightPixels / 2;
@@ -107,10 +108,6 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
         Log.d(Prefs.LOG_TAG,"layoutParams.width: " + layoutParams.width);
         Log.d(Prefs.LOG_TAG,"layoutParams.height: " + layoutParams.height);
-
-
-
-
 
 
         observer = new ContentObserver(new Handler()) {
@@ -159,11 +156,16 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onLoadFinished expenses- " +data.get(Prefs.FIELD_SUMMA_EXPENSES) );
         if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onLoadFinished incomes- " +data.get(Prefs.FIELD_SUMMA_INCOMES) );
         if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onLoadFinished getLoader = "+ loader.getId());
+        if(DEBUG) Log.d(Prefs.LOG_TAG,"CashflowFragment onLoadFinished layoutParams.width: " + layoutParams.width);
+        if(DEBUG) Log.d(Prefs.LOG_TAG,"CashflowFragment onLoadFinished layoutParams.height: " + layoutParams.height);
 
         switch (loader.getId()) {
             case CASHFLOW_LOADER_ID:
                 tvCashflowExpensesSumma.setText( data.get(Prefs.FIELD_SUMMA_EXPENSES) + Prefs.UAH);
                 tvCashflowIncomesSumma.setText(data.get(Prefs.FIELD_SUMMA_INCOMES) + Prefs.UAH);
+
+                graphics.setValues( Float.parseFloat(data.get(Prefs.FIELD_SUMMA_INCOMES)), Float.parseFloat(data.get(Prefs.FIELD_SUMMA_EXPENSES)) );
+                graphics.invalidate();
 
                 if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onLoadFinished observer = "+ observer.getClass().toString());
 
@@ -171,7 +173,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 break;
         }
 
-        graphics.setValues(10, 100);
+
 
 
     }
@@ -310,7 +312,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
             String key = Prefs.URI_BALANCE.getLastPathSegment();
 
-            if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  " + key);
+            if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader loadData  " + key);
 
             if ( cursor.moveToFirst() ) {
 
@@ -320,20 +322,22 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                     result.put(Prefs.FIELD_SUMMA_EXPENSES, String.valueOf(summaExpenses));
                     result.put(Prefs.FIELD_SUMMA_INCOMES, String.valueOf(summaIncomes));
 
-                    if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  " + String.valueOf(summaExpenses));
-                    if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  " + String.valueOf(summaIncomes));
+                    if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader loadData  " + String.valueOf(summaExpenses));
+                    if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader loadData  " + String.valueOf(summaIncomes));
 
             } else {
                 result.put(Prefs.FIELD_SUMMA_EXPENSES, "0");
                 result.put(Prefs.FIELD_SUMMA_INCOMES, "0");
 
-                if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onStartLoading - Cursor is NULL");
+                if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment loadData - Cursor is NULL");
             }
 
-            if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader onStartLoading  deliverResult");
+            if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment HashMapLoader loadData  deliverResult");
 
-            deliverResult(result);
             cursor.close();
+            deliverResult(result);
+
+
         }
 
 
