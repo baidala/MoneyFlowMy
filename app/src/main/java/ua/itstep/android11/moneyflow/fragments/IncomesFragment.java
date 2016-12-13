@@ -46,7 +46,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
     public void onResume() {
         super.onResume();
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onResume ");
-        getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, false, observerIncomes);
+        getActivity().getContentResolver().registerContentObserver(Prefs.URI_INCOMES, true, observerIncomes);
     }
 
     @Override
@@ -181,6 +181,8 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         }
         return true;
     }
+
+
 
     private static class IncomesCursorLoader extends CursorLoader {
 

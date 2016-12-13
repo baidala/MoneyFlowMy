@@ -2,6 +2,7 @@ package ua.itstep.android11.moneyflow.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
@@ -37,7 +38,7 @@ public class Graphics extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log.d(Prefs.LOG_TAG , "Graphics onDraw ");
-        setBackgroundColor(676);
+        setBackgroundColor(Color.LTGRAY);
 
 
 
@@ -46,32 +47,38 @@ public class Graphics extends View {
         float width = right - left;
         bottom = canvas.getHeight();
 
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw topI: " +topI);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw topE: " +topE);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw before topI: " +topI);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw before topE: " +topE);
 
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw bottom: " +bottom);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw before bottom: " +bottom);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw before incomes: " +incomes);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw before expenses: " +expenses);
 
 
         if ( bottom != 0 ) {
-
+            float bottomTemp = bottom;
             if( incomes > expenses ) {
-                topE = bottom - bottom*(expenses/incomes) +1;
+                topE = bottomTemp-(bottom*(expenses/(incomes +1)));
+                topI = 0l;
 
+                //Log.d(Prefs.LOG_TAG, "Graphics onDraw incomes div : "+(expenses/(incomes +1)));
+                //Log.d(Prefs.LOG_TAG, "Graphics onDraw incomes div : "+ (bottom*(expenses/(incomes +1))) );
                 Log.d(Prefs.LOG_TAG, "Graphics onDraw incomes procent : "+topE);
 
             } else {
-                topI = bottom - bottom*(incomes/expenses) +1;
+                topE = 0l;
+                topI = bottomTemp-(bottom*(incomes/(expenses +1)));
 
                 Log.d(Prefs.LOG_TAG, "Graphics onDraw expenses procent : "+topI);
 
             }
         }
 
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw right: " +right);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw bottom: " +bottom);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw width: " +width);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw topI: " +topI);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw topE: " +topE);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after right: " +right);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after bottom: " +bottom);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after width: " +width);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after topI: " +topI);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after topE: " +topE);
 
         float leftE = right + width;
         float rightE = leftE + width;

@@ -57,7 +57,7 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
     public void onResume() {
         super.onResume();
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment onResume ");
-        getActivity().getContentResolver().registerContentObserver(Prefs.URI_EXPENSES, false, observerExpenses);
+        getActivity().getContentResolver().registerContentObserver(Prefs.URI_EXPENSES, true, observerExpenses);
     }
 
     @Override
