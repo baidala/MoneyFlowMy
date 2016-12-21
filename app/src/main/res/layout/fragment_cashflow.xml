@@ -116,15 +116,19 @@
 
     <ListView
         android:id="@+id/lvCategories"
+        android:paddingRight="6dp"
+        android:paddingLeft="6dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:text="test"
         android:layout_gravity="top"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_row="4"
         android:layout_column="1"
-        android:layout_rowSpan="4"
+        android:layout_rowSpan="6"
         android:alignmentMode="alignMargins"
-        android:background="@color/colorAccent"/>
+        />
 
 
 </GridLayout>

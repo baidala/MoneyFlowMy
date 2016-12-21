@@ -3,6 +3,7 @@ package ua.itstep.android11.moneyflow.fragments;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -202,6 +203,10 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
 
             //if(Prefs.DEBUG) logCursor(cursor);
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment ExpensesCursorLoader loadInBackground count - " +cursor.getCount());
+
+            if ( (cursor == null) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
+                throw new SQLException();
+            }
 
             return cursor;
         }

@@ -38,7 +38,7 @@ public class Graphics extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log.d(Prefs.LOG_TAG , "Graphics onDraw ");
-        setBackgroundColor(Color.LTGRAY);
+        //setBackgroundColor(Color.LTGRAY);
 
 
 

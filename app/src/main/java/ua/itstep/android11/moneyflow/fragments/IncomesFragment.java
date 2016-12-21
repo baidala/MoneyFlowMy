@@ -3,6 +3,7 @@ package ua.itstep.android11.moneyflow.fragments;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -194,12 +195,16 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         }
 
         @Override
-        public Cursor loadInBackground() {
+        public Cursor loadInBackground() throws SQLException {
             //if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground");
 
             Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_DATE}, null, null, null);
             //if(Prefs.DEBUG) logCursor(cursor);
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground - " +cursor.getCount());
+
+            if ( (cursor == null) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
+                throw new SQLException("Failed to load data from "+ Prefs.URI_INCOMES);
+            }
 
             return cursor;
         }

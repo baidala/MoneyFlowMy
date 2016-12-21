@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.HashMap;
+
 
 import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.utils.Prefs;
@@ -104,9 +105,9 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateView ");
 
-        String[] from = new String[] {Prefs.FIELD_ID, Prefs.FIELD_CATEGORY};
-        int[] to = new int[] {R.id.tvSummaItemIncomes, R.id.tvNameItemIncomes};
-        //TODO
+        String[] from = new String[] {Prefs.FIELD_CATEGORY};
+        int[] to = new int[] {R.id.text1};
+
 
         View view =  inflater.inflate( R.layout.fragment_cashflow, container , false);
         tvCashflowExpenses = (TextView)view.findViewById(R.id.tvCashflowExpenses);
@@ -134,7 +135,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
 
         scCategoriesAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
-                R.layout.item_incomes, //TODO
+                R.layout.category_item,
                 null, from, to,
                 CursorAdapter.NO_SELECTION);
 
@@ -143,7 +144,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         lvCaregories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateView onItemClick:" + position);
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment setOnItemClickListener onItemClick:" + position);
 
             }
         });
@@ -194,7 +195,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateLoader ");
+        if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateLoader " + id);
 
         switch (id) {
             case CASHFLOW_LOADER_ID:
@@ -220,7 +221,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
         switch (loader.getId()) {
             case CASHFLOW_LOADER_ID:
-                if ( data != null && data.moveToFirst()) {
+                if ( data != null && data.moveToFirst() ) {
                     tvCashflowExpensesSumma.setText( data.getString(data.getColumnIndex(Prefs.FIELD_SUMMA_EXPENSES)) + Prefs.UAH );
                     tvCashflowIncomesSumma.setText( data.getString(data.getColumnIndex(Prefs.FIELD_SUMMA_INCOMES)) + Prefs.UAH );
 
@@ -234,7 +235,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 break;
 
             case CATEGORY_LOADER_ID:
-                //scCategoriesAdapter.swapCursor(data);
+                scCategoriesAdapter.swapCursor(data);
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onLoadFinished  CATEGORY_LOADER_ID");
                 break;
         }
@@ -302,10 +303,10 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
         if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment recalcData: " + key);
 
-        if ( cursor != null) {
+        if ( (cursor != null) && cursor.moveToFirst() ) {
             double summa = 0.0;
             int updatedRows = 0;
-            cursor.moveToFirst();
+            //cursor.moveToFirst();
 
             if ( cursor.getCount() != 0 ) {
 
@@ -365,9 +366,9 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
         CategoryCursorLoader( Context context ) {
             super(context, Prefs.URI_CATEGORY,
-                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_SUMMA_EXPENSES, Prefs.FIELD_SUMMA_INCOMES},
+                    new String[] {Prefs.FIELD_ID, Prefs.FIELD_CATEGORY},
                     null, null, null);
-            if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment CashflowCursorLoader() ");
+            if(DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment CategoryCursorLoader() ");
 
             //result = new HashMap<>();
         }
@@ -376,9 +377,12 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         public Cursor loadInBackground() {
             //if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground");
 
-            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_BALANCE, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA_EXPENSES, Prefs.FIELD_SUMMA_INCOMES}, null, null, null);
+            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_CATEGORY, new String[]{Prefs.FIELD_ID, Prefs.FIELD_CATEGORY}, null, null, null);
             //if(Prefs.DEBUG) logCursor(cursor);
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment CashflowCursorLoader loadInBackground - " +cursor.getCount());
+            if ( (null == cursor) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
+                throw new SQLException("Failed to load data from "+ Prefs.URI_CATEGORY);
+            }
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment CategoryCursorLoader loadInBackground rows: " +cursor.getCount());
 
             return cursor;
         }
@@ -406,7 +410,11 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
             Cursor cursor = getContext().getContentResolver().query(Prefs.URI_BALANCE, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA_EXPENSES, Prefs.FIELD_SUMMA_INCOMES}, null, null, null);
             //if(Prefs.DEBUG) logCursor(cursor);
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment CashflowCursorLoader loadInBackground - " +cursor.getCount());
+            if ( (null == cursor) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
+                throw new SQLException("Failed to load data from "+ Prefs.URI_BALANCE);
+            }
+
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment CashflowCursorLoader loadInBackground rows: " +cursor.getCount());
 
             return cursor;
         }

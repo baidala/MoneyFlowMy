@@ -65,7 +65,7 @@ public class MyContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) throws SQLException {
         Log.d(Prefs.LOG_TAG, "MyContentProvider insert");
 
-        long id;
+        long id = 0l;
         Uri insertUri = null;
         ContentValues cvDescription;
         ContentValues cvBalance;
@@ -91,7 +91,7 @@ public class MyContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
-                    throw new SQLException("Failed to insert row into "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to insert row into "+ uri);
                 }
                 break;
 
@@ -108,7 +108,7 @@ public class MyContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(Prefs.URI_DESCRIPTION, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ Prefs.URI_DESCRIPTION);
-                    throw new SQLException("Failed to insert row into "+ Prefs.URI_DESCRIPTION);
+                    Log.e(Prefs.LOG_TAG,"Failed to insert row into "+ Prefs.URI_DESCRIPTION);
                 }
 
                 ContentValues cvExpense = new ContentValues();
@@ -129,7 +129,7 @@ public class MyContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(Prefs.URI_EXPENSES, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
-                    throw new SQLException("Failed to insert row into "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to insert row into "+ uri);
                 }
 
                 cvBalance = new ContentValues();
@@ -150,7 +150,7 @@ public class MyContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(Prefs.URI_DESCRIPTION, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ Prefs.URI_DESCRIPTION);
-                    throw new SQLException("Failed to insert row into "+ Prefs.URI_DESCRIPTION);
+                    Log.e(Prefs.LOG_TAG,"Failed to insert row into "+ Prefs.URI_DESCRIPTION);
                 }
 
                 ContentValues cvIncomes = new ContentValues();
@@ -164,7 +164,7 @@ public class MyContentProvider extends ContentProvider {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider insertUri = " + uri);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
-                    throw new SQLException("Failed to insert row into "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to insert row into "+ uri);
                 }
 
                 cvBalance = new ContentValues();
@@ -180,7 +180,7 @@ public class MyContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
-                    throw new SQLException("Failed to insert row into "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to insert row into "+ uri);
                 }
                 break;
         }
@@ -274,7 +274,7 @@ public class MyContentProvider extends ContentProvider {
 
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
-                    throw new SQLException("Failed to update row in "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to update row in "+ uri);
                 }
                 break;
 
@@ -293,7 +293,7 @@ public class MyContentProvider extends ContentProvider {
 
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
-                    throw new SQLException("Failed to update row in "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to update row in "+ uri);
                 }
 
                 cvBalance = new ContentValues();
@@ -325,7 +325,7 @@ public class MyContentProvider extends ContentProvider {
 
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
-                    throw new SQLException("Failed to update row in "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to update row in "+ uri);
                 }
 
                 cvBalance = new ContentValues();
@@ -356,7 +356,7 @@ public class MyContentProvider extends ContentProvider {
 
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
-                    throw new SQLException("Failed to update row in "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to update row in "+ uri);
                 }
 
                 break;
@@ -375,7 +375,7 @@ public class MyContentProvider extends ContentProvider {
 
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to update row in "+ uri);
-                    throw new SQLException("Failed to update row in "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to update row in "+ uri);
                 }
 
                 break;
@@ -426,7 +426,7 @@ public class MyContentProvider extends ContentProvider {
 
                 } else {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to delete row in "+ uri);
-                    throw new SQLException("Failed to delete row in "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to delete row in "+ uri);
                 }
 
                 summa_old *= -1;
@@ -457,8 +457,8 @@ public class MyContentProvider extends ContentProvider {
                     Log.d(Prefs.LOG_TAG, "MyContentProvider delete notifyChange deleted = "+ deleted);
 
                 } else {
-                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to delete row in "+ uri);
-                    throw new SQLException("Failed to delete row in "+ uri);
+                    if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to delete row in "+ uri);
+                    Log.e(Prefs.LOG_TAG, "Failed to delete row in "+ uri);
                 }
 
                 summa_old *= -1;
@@ -491,13 +491,14 @@ public class MyContentProvider extends ContentProvider {
         // TODO: Implement this to handle requests for the MIME type of the data
         // at the given URI.
         Log.d(Prefs.LOG_TAG, "MyContentProvider getType");
-        throw new UnsupportedOperationException("Not yet implemented");
+        Log.e(Prefs.LOG_TAG,"Not yet implemented");
+        return null;
     }
 
 
     private void updateDescription(ContentValues cvDescription, String where, String[] whereArgs) {
         Cursor cursor;
-        long id;
+        long id = 0l;
 
         cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_DESC_ID}, where, whereArgs, null, null, null);
         if ( cursor.moveToFirst() ) {
