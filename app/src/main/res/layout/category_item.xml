@@ -6,4 +6,5 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:textAlignment="inherit"
-    style="@style/AppSpinnerItem" />
+    android:textSize="22sp"
+    android:textColor="@android:color/black" />

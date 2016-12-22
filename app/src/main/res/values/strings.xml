@@ -32,6 +32,7 @@
     <string name="delete_button_dialog">Delete</string>
     <string name="title_change_incomes_dialog">Change income</string>
     <string name="spents_by_categories">Spents by categories:</string>
+    <string name="title_category_dialog">Spents by category</string>
 
 
 </resources>

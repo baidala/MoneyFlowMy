@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -205,7 +204,7 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment ExpensesCursorLoader loadInBackground count - " +cursor.getCount());
 
             if ( (cursor == null) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
-                throw new SQLException();
+                Log.e(Prefs.LOG_TAG, "ExpensesFragment  ExpensesCursorLoader loadInBackground - Cursor is null");
             }
 
             return cursor;
@@ -226,6 +225,7 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             } else {
                 Log.d(Prefs.LOG_TAG, "ExpensesFragment  logCursor - Cursor is null");
+                Log.e(Prefs.LOG_TAG, "ExpensesFragment  logCursor - Cursor is null");
             }
         }
 
