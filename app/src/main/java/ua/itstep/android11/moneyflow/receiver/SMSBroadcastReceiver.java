@@ -40,11 +40,12 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
         }
 
         sms_from = messages[0].getDisplayOriginatingAddress();
+        sms_from.toUpperCase();
         Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive DisplayOriginatingAddress=>" + sms_from);
 
-        sms_from.toUpperCase();
 
-        sms_from =  Prefs.SBERBANK_RF;   // debug only
+
+        sms_from =  Prefs.SBERBANK_RF;   // for debug only
 
         switch (sms_from) {
             case Prefs.SBERBANK_RF:

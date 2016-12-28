@@ -85,15 +85,14 @@ public class Prefs {
     public static final String UAH = " грн";
 
     public static final String SBERBANK_RF = "SBERBANK_RF"; //320627 SBERBANK_RF 7237226573
-    public static final int SBERBANK_RF_OPLATA = 3206271;
-    public static final int SBERBANK_RF_ZACHISLENIE = 3206272;
 
-    public static final String SBERBANK_OPLATA = "Oplata=[0-9]{2,7}.[0-9]{0,2} UAH" ;
+
+    public static final String SBERBANK_OPLATA = ".*Oplata=[0-9]{2,7}.*[0-9]{0,2} UAH.*" ;
     public static final String SBERBANK_OPLATA_SPLIT = "Oplata=| UAH" ;
-    public static final String SBERBANK_DATE = "^[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]" ;
-    public static final String SBERBANK_DESC = "[0-9][0-9][0-9][0-9][\\w\\s]{1,30}Ostatok" ;
+    public static final String SBERBANK_DATE = "^[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9].*" ;
+    public static final String SBERBANK_DESC = ".*[0-9][0-9][0-9][0-9][\\w\\s]{1,30}Ostatok.*" ;
     public static final String SBERBANK_DESC_SPLIT = "[0-9][0-9][0-9][0-9] | Ostatok" ;
-    public static final String SBERBANK_ZACHISLENIE = "Zachislenie: UAH [0-9,]{1,20}.[0-9]{0,2}" ;
+    public static final String SBERBANK_ZACHISLENIE = ".*Zachislenie: UAH [0-9,]{1,20}.*[0-9]{0,2}.*" ;
 
 
     public static final int EXPENSES = 1;

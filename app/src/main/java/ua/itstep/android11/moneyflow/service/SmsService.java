@@ -40,9 +40,6 @@ public class SmsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(Prefs.LOG_TAG, "SmsService onStartCommand "+ intent.getAction());
-        String regexp = "";
-        Pattern pattern;
-        Matcher matcher;
 
         sms_from = intent.getExtras().getString("sms_from");
         sms_body = intent.getExtras().getString("sms_body");
@@ -68,7 +65,7 @@ public class SmsService extends Service {
 
 
     private void parceSmsBody(String bank) {
-        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody="+ bank);
+        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody bank="+ bank);
         String regexp = "";
         Pattern pattern;
         Matcher matcher;
@@ -81,7 +78,7 @@ public class SmsService extends Service {
             case Prefs.SBERBANK_RF:
 
                 regexp = Prefs.SBERBANK_OPLATA;
-                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                pattern = Pattern.compile(regexp, Pattern.DOTALL);
                 matcher = pattern.matcher(sms_body);
                 if( matcher.find() ) {
                     Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches Oplata=" + matcher.group());
@@ -99,7 +96,7 @@ public class SmsService extends Service {
 
 
                     regexp = Prefs.SBERBANK_DATE;  // DD/MM HH24:MI
-                    pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                    pattern = Pattern.compile(regexp, Pattern.DOTALL);
                     matcher = pattern.matcher(sms_body);
                     if( matcher.find() ) {
                         Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches date=" + matcher.group());
@@ -112,7 +109,7 @@ public class SmsService extends Service {
                     }
 
                     regexp = Prefs.SBERBANK_DESC ;  // 6387 SBERBANK ONLINE UAH Ostatok
-                    pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                    pattern = Pattern.compile(regexp, Pattern.DOTALL);
                     matcher = pattern.matcher(sms_body);
                     if( matcher.find() ) {
                         Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches desc=" + matcher.group());
@@ -140,20 +137,20 @@ public class SmsService extends Service {
                     break;
 
                 } else {
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche SBERBANK_OPLATA");
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand ERROR Pattern.NOTMatche SBERBANK_OPLATA");
 
                 }
 
 
                 regexp = Prefs.SBERBANK_ZACHISLENIE;
-                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                pattern = Pattern.compile(regexp, Pattern.DOTALL);
                 matcher = pattern.matcher(sms_body);
                 if( matcher.find() ) {
                     Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody SBERBANK_RF_ZACHISLENIE");
                     //TODO
 
 
-                    saveSmsData(summa, desc, date, Prefs.INCOMES);
+                    //saveSmsData(summa, desc, date, Prefs.INCOMES);
                     break;
 
                 } else {
@@ -167,98 +164,6 @@ public class SmsService extends Service {
         Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody switch end.");
 
     }
-
-    private void parceSmsBody(int bankOperation) {
-        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody="+ bankOperation);
-        String regexp = "";
-        Pattern pattern;
-        Matcher matcher;
-        String summa = "";
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());;
-        String desc = "";
-        String[] stringArray;
-
-        switch( bankOperation ) {
-            case Prefs.SBERBANK_RF_OPLATA:
-
-                regexp = "Oplata=[0-9]{2,7}.[0-9]{0,2} UAH";
-                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-                matcher = pattern.matcher(sms_body);
-                if( matcher.find() ) {
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches Oplata=" + matcher.group());
-
-                    summa = matcher.group();
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody summa=" + summa);
-                    stringArray = summa.split("Oplata=| UAH");
-
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
-                    for(int i=0; i < stringArray.length; i++) {
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
-                    }
-
-                    summa = stringArray[stringArray.length - 1];
-                } else {
-
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche SUMMA");
-                    break;
-                }
-
-                regexp = "^[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]";  // DD/MM HH24:MI
-                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-                matcher = pattern.matcher(sms_body);
-                if( matcher.find() ) {
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches date=" + matcher.group());
-
-                    date = matcher.group();
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody date=" + date);
-
-                } else {
-
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatches DATE");
-                    break;
-                }
-
-                regexp = "[0-9][0-9][0-9][0-9][\\w\\s]{1,30}Ostatok";  // 6387 SBERBANK ONLINE UAH Ostatok
-                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-                matcher = pattern.matcher(sms_body);
-                if( matcher.find() ) {
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches desc=" + matcher.group());
-
-                    desc = matcher.group();
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody desc=" + desc);
-
-                    stringArray = desc.split("[0-9][0-9][0-9][0-9] | Ostatok");
-
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
-                    for(int i=0; i < stringArray.length; i++) {
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
-                    }
-
-
-
-                    desc = stringArray[stringArray.length - 1];
-
-                } else {
-
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche DESC:" + matcher.toString());
-                    break;
-                }
-
-
-                saveSmsData(summa, desc, date, Prefs.EXPENSES);
-                break;
-
-            case Prefs.SBERBANK_RF_ZACHISLENIE:
-
-
-                saveSmsData(summa, desc, date, Prefs.INCOMES);
-                break;
-        }
-        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody switch end.");
-
-
-    }
-
 
 
     private void saveSmsData(String summa, String desc, String date, int category) {

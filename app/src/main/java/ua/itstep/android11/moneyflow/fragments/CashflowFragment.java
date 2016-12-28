@@ -27,8 +27,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.dialogs.CategoryDialog;
@@ -82,6 +85,17 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 URI_BALANCE_CODE);
     }
 
+
+    String textToParse = "28/12 11:48\n" +
+            "Oplata=60 UAH\n" +
+            "Karta 4524-6387 PEREVOD NA SCHET\n" +
+            "Ostatok=14760.69 UAH.\n" +
+            "Schastlivogo Novogo goda i Rozhdestva! Vash Sberbank!" ;
+
+    String textToParse2 = "15/10 11:26Oplata=22 UAH" +
+            "Karta 4524-6387 PEREVOD NA SCHET" +
+            "Ostatok=14760.69 UAH." +
+            "Schastlivogo Novogo goda i Rozhdestva! Vash Sberbank!" ;
 
 
     @Override
@@ -286,6 +300,8 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+
         switch (item.getItemId()) {
             case R.id.item_refresh:
                 getActivity().getSupportLoaderManager().restartLoader(CASHFLOW_LOADER_ID, null, this);
@@ -295,8 +311,28 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 break;
 
             case R.id.item_reCalc:
-                recalcData(Prefs.URI_INCOMES);
-                recalcData(Prefs.URI_EXPENSES);
+                //recalcData(Prefs.URI_INCOMES);
+                //recalcData(Prefs.URI_EXPENSES);
+
+
+                String regexp = Prefs.SBERBANK_OPLATA;
+                Pattern pattern = Pattern.compile(regexp, Pattern.DOTALL);
+                Matcher matcher = pattern.matcher(textToParse);
+
+                Log.d(Prefs.LOG_TAG, "CashflowFragment  SBERBANK_OPLATA :"+ textToParse);
+
+                if( matcher.find() ) {
+                    Context context = getContext();
+                    Toast t = Toast.makeText(context, "OK Pattern.matches SBERBANK_OPLATA", Toast.LENGTH_LONG);
+                    t.show();
+                    Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches SBERBANK_OPLATA");
+                } else {
+                    Context context = getContext();
+                    Toast t = Toast.makeText(context, "ERROR Pattern.NotMatches SBERBANK_OPLATA", Toast.LENGTH_LONG);
+                    t.show();
+                    Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected ERROR Pattern.NOTMatches SBERBANK_OPLATA");
+                }
+
 
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_reCalc");
                 break;
