@@ -57,7 +57,7 @@ public class CategoryDialog extends DialogFragment implements LoaderManager.Load
 
         getActivity().getSupportLoaderManager().restartLoader( CATEGORY_LOADER_ID, getArguments(), this );
 
-        //getActivity().getSupportLoaderManager().initLoader(CATEGORY_LOADER_ID, getArguments(), this);
+
 
 
 

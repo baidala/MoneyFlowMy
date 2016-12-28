@@ -420,11 +420,15 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
             Cursor cursor = getContext().getContentResolver().query(Prefs.URI_BALANCE, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA_EXPENSES, Prefs.FIELD_SUMMA_INCOMES}, null, null, null);
             //if(Prefs.DEBUG) logCursor(cursor);
+
+
+
             if ( (null == cursor) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
-                throw new SQLException("Failed to load data from "+ Prefs.URI_BALANCE);
+                Log.e(Prefs.LOG_TAG, "Failed to load data from "+ Prefs.URI_BALANCE);
             }
 
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment CashflowCursorLoader loadInBackground rows: " +cursor.getCount());
+
 
             return cursor;
         }

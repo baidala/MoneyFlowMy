@@ -24,7 +24,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive "+ intent.getAction());
+        Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive " + intent.getAction());
 
         if (intent != null && intent.getAction() != null &&
                 ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
@@ -32,34 +32,44 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
             messages = new SmsMessage[pduArray.length];
 
             for (int i = 0; i < pduArray.length; i++) {
-                 messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i]);  //for API 15 up to 22
+                messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i]);  //for API 15 up to 22
                 //messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i], Telephony.Sms.Intents.SMS_RECEIVED_ACTION);  //for API 23
-                Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive pduArray.length="+ pduArray.length );
+                Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive pduArray.length=" + pduArray.length);
 
             }
         }
 
         sms_from = messages[0].getDisplayOriginatingAddress();
-        Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive DisplayOriginatingAddress="+ sms_from );
+        Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive DisplayOriginatingAddress=>" + sms_from);
 
-        if (sms_from.equalsIgnoreCase(Prefs.SBERBANK_RF)) {
-            StringBuilder bodyText = new StringBuilder();
+        sms_from.toUpperCase();
 
-            for (int i = 0; i < messages.length; i++) {
-                bodyText.append(messages[i].getMessageBody());
-                Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive messages[" +i+"] ="+ messages[i].getMessageBody() );
-            }
-            body = bodyText.toString();
+        sms_from =  Prefs.SBERBANK_RF;   // debug only
 
-            Intent mIntent = new Intent(context, SmsService.class);
-            mIntent.putExtra("sms_from", sms_from);
-            mIntent.putExtra("sms_body", body);
+        switch (sms_from) {
+            case Prefs.SBERBANK_RF:
+
+                StringBuilder bodyText = new StringBuilder();
+
+                for (int i = 0; i < messages.length; i++) {
+                    bodyText.append(messages[i].getMessageBody());
+                    Log.d(Prefs.LOG_TAG, "SMSBroadcastReceiver onReceive messages[" + i + "] =" + messages[i].getMessageBody());
+                }
+                body = bodyText.toString();
+
+                Intent mIntent = new Intent(context, SmsService.class);
+                mIntent.putExtra("sms_from", sms_from);
+                mIntent.putExtra("sms_body", body);
 
 
-            context.startService(mIntent);
+                context.startService(mIntent);
 
-            abortBroadcast();
+                abortBroadcast();
+                break;
+
         }
 
     }
-}
+
+
+} //SMSBroadcastReceiver

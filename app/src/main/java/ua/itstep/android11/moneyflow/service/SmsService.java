@@ -47,35 +47,125 @@ public class SmsService extends Service {
         sms_from = intent.getExtras().getString("sms_from");
         sms_body = intent.getExtras().getString("sms_body");
 
+        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand =>"+ sms_from +" =>"+ sms_body);
+
         //showNotification(sms_from, sms_body);
+
 
         switch(sms_from) {
             case Prefs.SBERBANK_RF:
-                regexp = "Oplata=[0-9]{2,7}.[0-9]{0,2} UAH";
-                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-                matcher = pattern.matcher(sms_body);
-                if( matcher.find() ) {
-                    parceSmsBody(Prefs.SBERBANK_RF_OPLATA);
-                    break;
-                }
-
-                regexp = "Zachislenie: UAH [0-9,]{1,20}.[0-9]{0,2}";
-                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-                matcher = pattern.matcher(sms_body);
-                if( matcher.find() ) {
-                    parceSmsBody(Prefs.SBERBANK_RF_ZACHISLENIE);
-                    break;
-                }
-
+                Log.d(Prefs.LOG_TAG, "SmsService onStartCommand sms_from = SBERBANK_RF");
+                parceSmsBody(Prefs.SBERBANK_RF);
 
                 break;
+
         }
 
 
 
-
-
         return START_STICKY;
+    }
+
+
+    private void parceSmsBody(String bank) {
+        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody="+ bank);
+        String regexp = "";
+        Pattern pattern;
+        Matcher matcher;
+        String summa = "0";
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());;
+        String desc = "";
+        String[] stringArray;
+
+        switch( bank ) {
+            case Prefs.SBERBANK_RF:
+
+                regexp = Prefs.SBERBANK_OPLATA;
+                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                matcher = pattern.matcher(sms_body);
+                if( matcher.find() ) {
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches Oplata=" + matcher.group());
+
+                    summa = matcher.group();
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody summa=" + summa);
+                    stringArray = summa.split(Prefs.SBERBANK_OPLATA_SPLIT);
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
+                    for(int i=0; i < stringArray.length; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
+                    }
+
+                    summa = stringArray[stringArray.length - 1];
+
+
+                    regexp = Prefs.SBERBANK_DATE;  // DD/MM HH24:MI
+                    pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                    matcher = pattern.matcher(sms_body);
+                    if( matcher.find() ) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches date=" + matcher.group());
+
+                        date = matcher.group();
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody date=" + date);
+
+                    } else {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatches SBERBANK_DATE");
+                    }
+
+                    regexp = Prefs.SBERBANK_DESC ;  // 6387 SBERBANK ONLINE UAH Ostatok
+                    pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                    matcher = pattern.matcher(sms_body);
+                    if( matcher.find() ) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches desc=" + matcher.group());
+
+                        desc = matcher.group();
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody desc=" + desc);
+
+                        stringArray = desc.split(Prefs.SBERBANK_DESC_SPLIT);
+
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
+                        for(int i=0; i < stringArray.length; i++) {
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
+                        }
+
+
+
+                        desc = stringArray[stringArray.length - 1];
+
+                    } else {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche SBERBANK_DESC:" + matcher.toString());
+                    }
+
+
+                    saveSmsData(summa, desc, date, Prefs.EXPENSES);
+                    break;
+
+                } else {
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche SBERBANK_OPLATA");
+
+                }
+
+
+                regexp = Prefs.SBERBANK_ZACHISLENIE;
+                pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+                matcher = pattern.matcher(sms_body);
+                if( matcher.find() ) {
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody SBERBANK_RF_ZACHISLENIE");
+                    //TODO
+
+
+                    saveSmsData(summa, desc, date, Prefs.INCOMES);
+                    break;
+
+                } else {
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche SBERBANK_RF_ZACHISLENIE");
+                }
+
+
+
+                break;
+        }
+        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody switch end.");
+
     }
 
     private void parceSmsBody(int bankOperation) {
@@ -203,9 +293,9 @@ public class SmsService extends Service {
                 .setAutoCancel(true);
 
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = builder.build();
+        //Notification notification = builder.build();  api 16
 
-        notificationManager.notify(R.mipmap.ic_launcher, notification);
+        //notificationManager.notify(R.mipmap.ic_launcher, notification);
     }
 
 
