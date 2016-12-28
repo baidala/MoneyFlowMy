@@ -86,6 +86,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
 
+    /*
     String textToParse = "28/12 11:48\n" +
             "Oplata=60 UAH\n" +
             "Karta 4524-6387 PEREVOD NA SCHET\n" +
@@ -97,6 +98,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
             "Ostatok=14760.69 UAH." +
             "Schastlivogo Novogo goda i Rozhdestva! Vash Sberbank!" ;
 
+    */
 
     @Override
     public void onResume() {
@@ -311,10 +313,10 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 break;
 
             case R.id.item_reCalc:
-                //recalcData(Prefs.URI_INCOMES);
-                //recalcData(Prefs.URI_EXPENSES);
+                recalcData(Prefs.URI_INCOMES);
+                recalcData(Prefs.URI_EXPENSES);
 
-
+                /*
                 String regexp = Prefs.SBERBANK_OPLATA;
                 Pattern pattern = Pattern.compile(regexp, Pattern.DOTALL);
                 Matcher matcher = pattern.matcher(textToParse);
@@ -333,6 +335,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                     Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected ERROR Pattern.NOTMatches SBERBANK_OPLATA");
                 }
 
+                */
 
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_reCalc");
                 break;
