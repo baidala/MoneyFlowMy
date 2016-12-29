@@ -90,9 +90,11 @@ public class Prefs {
     public static final String SBERBANK_OPLATA = "Oplata=[0-9]{2,7}.*[0-9]{0,2} UAH" ;
     public static final String SBERBANK_OPLATA_SPLIT = "[Oplata=\\sUAH]" ;
     public static final String SBERBANK_DATE = "^[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]" ;
-    public static final String SBERBANK_DESC = "Karta\\s[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" ; //[\w\s]{1,30}
+    public static final String SBERBANK_DESC = "Karta:?+\\s+[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" ; //[\w\s]{1,30}
     //public static final String SBERBANK_DESC_SPLIT = "[0-9][0-9][0-9][0-9] | Ostatok" ;
-    public static final String SBERBANK_ZACHISLENIE = "Zachislenie: UAH [0-9,]{1,20}.*[0-9]{0,2}" ;
+    public static final String SBERBANK_ZACHISLENIE = "Zachislenie: " ;
+    public static final String SBERBANK_ZACHISLENIE_PTRN = "Zachislenie: UAH [0-9,]{1,20}.*[0-9]{0,2}" ;
+    public static final String SBERBANK_ZACHISLENIE_SPLIT = "[Zachislenie:\\sUAH]" ;
 
 
     public static final int EXPENSES = 1;

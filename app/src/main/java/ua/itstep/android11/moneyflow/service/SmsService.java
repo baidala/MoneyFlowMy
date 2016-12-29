@@ -104,6 +104,7 @@ public class SmsService extends Service {
                             flag = !flag;
                             summa = stringArray[i];
                             summa = summa.replaceAll( Prefs.SBERBANK_OPLATA_SPLIT, "");
+                            summa = summa.replaceAll( ",", "");
 
                         }
 
@@ -162,15 +163,85 @@ public class SmsService extends Service {
                 }
 
 
-                regexp = Prefs.SBERBANK_ZACHISLENIE;
+                regexp = Prefs.SBERBANK_ZACHISLENIE_PTRN;
                 pattern = Pattern.compile(regexp, Pattern.DOTALL);
                 matcher = pattern.matcher(sms_body);
                 if( matcher.find() ) {
                     Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody SBERBANK_RF_ZACHISLENIE");
-                    //TODO
+
+                    stringArray = sms_body.split("\\n+");
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
+                    for(int i=0; i < stringArray.length; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"]=>" + stringArray[i].toString());
+
+                    }
+
+                    flag = false;
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"]=>" + stringArray[i].toString());
+
+                        matcher = pattern.matcher( stringArray[i] );
+                        if( matcher.find() ) {
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches Zachislenie=stringArray["+i+"]=>"+ matcher.group());
+                            flag = !flag;
+                            summa = stringArray[i];
+                            summa = summa.replaceAll( Prefs.SBERBANK_ZACHISLENIE_SPLIT, "");
+                            summa = summa.replaceAll( ",", "");
+
+                        }
+
+                    }
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody summa=>" + summa);
 
 
-                    //saveSmsData(summa, desc, date, Prefs.INCOMES);
+                    regexp = Prefs.SBERBANK_DATE;  // DD/MM HH24:MI
+                    pattern = Pattern.compile(regexp, Pattern.DOTALL);
+                    flag = false;
+
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray[" + i + "]=>" + stringArray[i].toString());
+
+                        matcher = pattern.matcher( stringArray[i] );
+                        if (matcher.find()) {
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches date=" + matcher.group());
+
+                            flag = !flag;
+                            date = stringArray[i];
+                            date.trim();
+                        }
+                    }
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody date=>" + date);
+
+
+                    regexp = Prefs.SBERBANK_DESC ;  // Karta 4524-6387
+                    pattern = Pattern.compile(regexp, Pattern.DOTALL);
+                    flag = false;
+
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray[" + i + "]=>" + stringArray[i].toString());
+
+                        matcher = pattern.matcher(stringArray[i]);
+                        if (matcher.find()) {
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches desc=" + matcher.group());
+
+                            flag = !flag;
+                            StringBuilder str = new StringBuilder();
+                            str.append( Prefs.SBERBANK_ZACHISLENIE );
+                            str.append( stringArray[i] );
+                            str.trimToSize();
+                            desc = str.toString();
+
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody desc=" + desc);
+                        }
+                    }
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody desc=>" + desc);
+
+
+                    saveSmsData(summa, desc, date, Prefs.INCOMES);
                     break;
 
                 } else {
@@ -188,7 +259,7 @@ public class SmsService extends Service {
 
     private void saveSmsData(String summa, String desc, String date, int category) {
         ContentValues values = new ContentValues();
-        values.put(Prefs.FIELD_SUMMA, summa);
+        values.put(Prefs.FIELD_SUMMA, Double.valueOf(summa));
         values.put(Prefs.FIELD_DESC, desc);
         values.put(Prefs.FIELD_DATE, date);
 

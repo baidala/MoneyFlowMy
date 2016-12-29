@@ -133,7 +133,7 @@ public class MyContentProvider extends ContentProvider {
                 }
 
                 cvBalance = new ContentValues();
-                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsString(Prefs.FIELD_SUMMA) );
+                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsDouble(Prefs.FIELD_SUMMA) );
                 updateBalance( cvBalance );
                 break;
 
@@ -168,7 +168,7 @@ public class MyContentProvider extends ContentProvider {
                 }
 
                 cvBalance = new ContentValues();
-                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsString(Prefs.FIELD_SUMMA) );
+                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsDouble(Prefs.FIELD_SUMMA) );
                 updateBalance( cvBalance );
                 break;
 

@@ -87,17 +87,19 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
 
 
+    /*
     String textToParse = "28/12 11:48\n" +
             "Oplata=60 UAH\n" +
             "Karta 4524-6387 PEREVOD NA SCHET\n" +
             "Ostatok=14760.69 UAH.\n" +
             "Schastlivogo Novogo goda i Rozhdestva! Vash Sberbank!" ;
 
-    String textToParse2 = "15/10 11:26Oplata=22 UAH" +
-            "Karta 4524-6387 PEREVOD NA SCHET" +
-            "Ostatok=14760.69 UAH." +
+    String textToParse2 = "28/12 11:48\n" +
+            "Zachislenie: UAH 16,929.15\n" +
+            "Karta: 4524-6387\n" +
             "Schastlivogo Novogo goda i Rozhdestva! Vash Sberbank!" ;
 
+    */
 
 
     @Override
@@ -316,16 +318,17 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 recalcData(Prefs.URI_INCOMES);
                 recalcData(Prefs.URI_EXPENSES);
 
+
                 /*
                 String summa = "0";
                 String desc = "";
                 String date = "";
                 String[] stringArray;
-                String regexp = Prefs.SBERBANK_OPLATA;
+                String regexp = Prefs.SBERBANK_ZACHISLENIE_PTRN;
                 Pattern pattern = Pattern.compile(regexp, Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(textToParse);
+                Matcher matcher = pattern.matcher(textToParse2);
 
-                Log.d(Prefs.LOG_TAG, "CashflowFragment  SBERBANK_OPLATA :"+ textToParse);
+                Log.d(Prefs.LOG_TAG, "CashflowFragment  SBERBANK_OPLATA :"+ textToParse2);
 
                 if( matcher.find() ) {
                     Context context = getContext();
@@ -339,7 +342,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
 
 
-                    stringArray = textToParse.split("\\n+");
+                    stringArray = textToParse2.split("\\n+");
 
 
 
@@ -361,10 +364,10 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
                         matcher = pattern.matcher( stringArray[i] );
                         if( matcher.find() ) {
-                            Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches Oplata=stringArray["+i+"]=>"+ matcher.group());
+                            Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches Zachislenie=stringArray["+i+"]=>"+ matcher.group());
                             flag = !flag;
                             summa = stringArray[i];
-                            summa = summa.replaceAll( Prefs.SBERBANK_OPLATA_SPLIT, "");
+                            summa = summa.replaceAll( Prefs.SBERBANK_ZACHISLENIE_SPLIT, "");
 
                         }
 
@@ -399,7 +402,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                     t.show();
 
 
-                    regexp = Prefs.SBERBANK_DESC ;  // Karta 4524-6387 PEREVOD NA SCHET SBERBANK ONLINE
+                    regexp = Prefs.SBERBANK_DESC ;  // Karta 4524-6387
                     pattern = Pattern.compile(regexp, Pattern.DOTALL);
                     flag = false;
 
@@ -411,8 +414,12 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                             Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches desc=" + matcher.group());
 
                             flag = !flag;
-                            desc = stringArray[i];
-                            desc.trim();
+                            StringBuilder str = new StringBuilder();
+                            str.append( Prefs.SBERBANK_ZACHISLENIE );
+                            str.append( stringArray[i] );
+                            str.trimToSize();
+                            desc = str.toString();
+
                             Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody desc=" + desc);
                         }
                     }
@@ -430,8 +437,8 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                     Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected ERROR Pattern.NOTMatches SBERBANK_OPLATA");
                 }
 
-
                 */
+
 
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_reCalc");
                 break;
