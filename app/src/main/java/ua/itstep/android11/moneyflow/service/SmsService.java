@@ -44,7 +44,8 @@ public class SmsService extends Service {
         sms_from = intent.getExtras().getString("sms_from");
         sms_body = intent.getExtras().getString("sms_body");
 
-        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand =>"+ sms_from +" =>"+ sms_body);
+        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand =>"+ sms_from );
+        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand =>"+ sms_body );
 
         //showNotification(sms_from, sms_body);
 
@@ -73,6 +74,7 @@ public class SmsService extends Service {
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());;
         String desc = "";
         String[] stringArray;
+        boolean flag = false;
 
         switch( bank ) {
             case Prefs.SBERBANK_RF:
@@ -83,54 +85,72 @@ public class SmsService extends Service {
                 if( matcher.find() ) {
                     Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches Oplata=" + matcher.group());
 
-                    summa = matcher.group();
-                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody summa=" + summa);
-                    stringArray = summa.split(Prefs.SBERBANK_OPLATA_SPLIT);
+                    stringArray = sms_body.split("\\n+");
+
+                    //stringArray[0]=>28/12 11:48
+                    //stringArray[1]=>Oplata=60 UAH
+                    //stringArray[2]=>Karta 4524-6387 PEREVOD NA SCHET
+                    //stringArray[3]=>Ostatok=14760.69 UAH.
+                    //stringArray[4]=>Schastlivogo Novogo goda i Rozhdestva! Vash Sberbank!
 
                     Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
-                    for(int i=0; i < stringArray.length; i++) {
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
+
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"]=>" + stringArray[i].toString());
+
+                        matcher = pattern.matcher( stringArray[i] );
+                        if( matcher.find() ) {
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches Oplata=stringArray["+i+"]=>"+ matcher.group());
+                            flag = !flag;
+                            summa = stringArray[i];
+                            summa = summa.replaceAll( Prefs.SBERBANK_OPLATA_SPLIT, "");
+
+                        }
+
                     }
 
-                    summa = stringArray[stringArray.length - 1];
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody summa=>" + summa);
 
 
                     regexp = Prefs.SBERBANK_DATE;  // DD/MM HH24:MI
                     pattern = Pattern.compile(regexp, Pattern.DOTALL);
-                    matcher = pattern.matcher(sms_body);
-                    if( matcher.find() ) {
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches date=" + matcher.group());
+                    flag = false;
 
-                        date = matcher.group();
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody date=" + date);
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray[" + i + "]=>" + stringArray[i].toString());
 
-                    } else {
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatches SBERBANK_DATE");
-                    }
+                        matcher = pattern.matcher( stringArray[i] );
+                        if (matcher.find()) {
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches date=" + matcher.group());
 
-                    regexp = Prefs.SBERBANK_DESC ;  // 6387 SBERBANK ONLINE UAH Ostatok
-                    pattern = Pattern.compile(regexp, Pattern.DOTALL);
-                    matcher = pattern.matcher(sms_body);
-                    if( matcher.find() ) {
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches desc=" + matcher.group());
-
-                        desc = matcher.group();
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody desc=" + desc);
-
-                        stringArray = desc.split(Prefs.SBERBANK_DESC_SPLIT);
-
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray=" + stringArray.length);
-                        for(int i=0; i < stringArray.length; i++) {
-                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
+                            flag = !flag;
+                            date = stringArray[i];
+                            date.trim();
                         }
-
-
-
-                        desc = stringArray[stringArray.length - 1];
-
-                    } else {
-                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.NotMatche SBERBANK_DESC:" + matcher.toString());
                     }
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody date=>" + date);
+
+
+                    regexp = Prefs.SBERBANK_DESC ;  // Karta 4524-6387 PEREVOD NA SCHET SBERBANK ONLINE
+                    pattern = Pattern.compile(regexp, Pattern.DOTALL);
+                    flag = false;
+
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody stringArray[" + i + "]=>" + stringArray[i].toString());
+
+                        matcher = pattern.matcher(stringArray[i]);
+                        if (matcher.find()) {
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand Pattern.matches desc=" + matcher.group());
+
+                            flag = !flag;
+                            desc = stringArray[i];
+                            desc.trim();
+                            Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody desc=" + desc);
+                        }
+                    }
+
+                    Log.d(Prefs.LOG_TAG, "SmsService onStartCommand parceSmsBody desc=>" + desc);
 
 
                     saveSmsData(summa, desc, date, Prefs.EXPENSES);

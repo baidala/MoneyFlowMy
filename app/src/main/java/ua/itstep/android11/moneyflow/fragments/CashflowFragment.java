@@ -86,7 +86,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
 
-    /*
+
     String textToParse = "28/12 11:48\n" +
             "Oplata=60 UAH\n" +
             "Karta 4524-6387 PEREVOD NA SCHET\n" +
@@ -98,7 +98,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
             "Ostatok=14760.69 UAH." +
             "Schastlivogo Novogo goda i Rozhdestva! Vash Sberbank!" ;
 
-    */
+
 
     @Override
     public void onResume() {
@@ -317,6 +317,10 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 recalcData(Prefs.URI_EXPENSES);
 
                 /*
+                String summa = "0";
+                String desc = "";
+                String date = "";
+                String[] stringArray;
                 String regexp = Prefs.SBERBANK_OPLATA;
                 Pattern pattern = Pattern.compile(regexp, Pattern.DOTALL);
                 Matcher matcher = pattern.matcher(textToParse);
@@ -325,15 +329,107 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
                 if( matcher.find() ) {
                     Context context = getContext();
+
                     Toast t = Toast.makeText(context, "OK Pattern.matches SBERBANK_OPLATA", Toast.LENGTH_LONG);
                     t.show();
+
                     Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches SBERBANK_OPLATA");
+
+                    Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches Oplata=" + matcher.group());
+
+
+
+                    stringArray = textToParse.split("\\n+");
+
+
+
+
+
+                    Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody stringArray=" + stringArray.length);
+                    for(int i=0; i < stringArray.length; i++) {
+                        Log.d(Prefs.LOG_TAG, "SmsService onOptionsItemSelected parceSmsBody stringArray["+i+"=|" + stringArray[i].toString());
+
+                        t = Toast.makeText(context, stringArray[i], Toast.LENGTH_LONG);
+                        t.show();
+                    }
+
+                    Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody stringArray=" + stringArray.length);
+
+                    boolean flag = false;
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody stringArray["+i+"]=>" + stringArray[i].toString());
+
+                        matcher = pattern.matcher( stringArray[i] );
+                        if( matcher.find() ) {
+                            Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches Oplata=stringArray["+i+"]=>"+ matcher.group());
+                            flag = !flag;
+                            summa = stringArray[i];
+                            summa = summa.replaceAll( Prefs.SBERBANK_OPLATA_SPLIT, "");
+
+                        }
+
+                    }
+
+                    Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody summa=>" + summa);
+
+                    t = Toast.makeText(context, summa, Toast.LENGTH_LONG);
+                    t.show();
+
+
+                    regexp = Prefs.SBERBANK_DATE;  // DD/MM HH24:MI
+                    pattern = Pattern.compile(regexp, Pattern.DOTALL);
+                    flag = false;
+
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody stringArray[" + i + "]=>" + stringArray[i].toString());
+
+                        matcher = pattern.matcher( stringArray[i] );
+                        if (matcher.find()) {
+                            Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches date=" + matcher.group());
+
+                            flag = !flag;
+                            date = stringArray[i];
+                            date.trim();
+                        }
+                    }
+
+                    Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody date=>" + date);
+
+                    t = Toast.makeText(context, date, Toast.LENGTH_LONG);
+                    t.show();
+
+
+                    regexp = Prefs.SBERBANK_DESC ;  // Karta 4524-6387 PEREVOD NA SCHET SBERBANK ONLINE
+                    pattern = Pattern.compile(regexp, Pattern.DOTALL);
+                    flag = false;
+
+                    for(int i=0; i < stringArray.length && !flag; i++) {
+                        Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody stringArray[" + i + "]=>" + stringArray[i].toString());
+
+                        matcher = pattern.matcher(stringArray[i]);
+                        if (matcher.find()) {
+                            Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected Pattern.matches desc=" + matcher.group());
+
+                            flag = !flag;
+                            desc = stringArray[i];
+                            desc.trim();
+                            Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody desc=" + desc);
+                        }
+                    }
+
+                    Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected parceSmsBody desc=>" + desc);
+
+                    t = Toast.makeText(context, desc, Toast.LENGTH_LONG);
+                    t.show();
+
+
                 } else {
                     Context context = getContext();
                     Toast t = Toast.makeText(context, "ERROR Pattern.NotMatches SBERBANK_OPLATA", Toast.LENGTH_LONG);
                     t.show();
                     Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected ERROR Pattern.NOTMatches SBERBANK_OPLATA");
                 }
+
 
                 */
 
