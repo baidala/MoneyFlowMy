@@ -45,7 +45,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
 
 
 
-        sms_from =  Prefs.SBERBANK_RF;   // for debug only
+        //sms_from =  Prefs.SBERBANK_RF;   // for debug only
 
         switch (sms_from) {
             case Prefs.SBERBANK_RF:
