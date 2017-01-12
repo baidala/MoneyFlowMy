@@ -2,6 +2,7 @@ package ua.itstep.android11.moneyflow.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -34,6 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ua.itstep.android11.moneyflow.R;
+import ua.itstep.android11.moneyflow.activities.ChangeCategoryActivity;
 import ua.itstep.android11.moneyflow.dialogs.CategoryDialog;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 import ua.itstep.android11.moneyflow.views.Graphics;
@@ -297,6 +299,8 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main, menu);
 
+        MenuItem menuItem = menu.findItem(R.id.item_change_category);
+        menuItem.setIntent( new Intent(getActivity().getApplicationContext(), ChangeCategoryActivity.class) );
 
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateOptionsMenu");
 
@@ -312,6 +316,12 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 getActivity().getSupportLoaderManager().restartLoader(CATEGORY_LOADER_ID, null, this);
 
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_refresh");
+                break;
+
+            case R.id.item_change_category:
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_change_category");
+
+
                 break;
 
             case R.id.item_reCalc:
