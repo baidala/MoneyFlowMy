@@ -162,8 +162,11 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.item_reCalc);
+        menuItem.setVisible(false);
 
 
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onCreateOptionsMenu");

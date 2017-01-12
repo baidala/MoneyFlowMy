@@ -12,7 +12,7 @@
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">Contacts permissions are needed for providing email completions.</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
-    <string name="item_menu_refresh_text">Add expense</string>
+    <string name="item_menu_refresh_text">Refresh</string>
     <string name="message_add_new_expense_dialog">Add new expense</string>
     <string name="title_add_new_expense_dialog">Add expense</string>
     <string name="positive_button_dialog">Ok</string>
@@ -33,6 +33,9 @@
     <string name="title_change_incomes_dialog">Change income</string>
     <string name="spents_by_categories">Spents by categories:</string>
     <string name="title_category_dialog">Spents by category</string>
+    <string name="item_submenu_text">submenu</string>
+    <string name="item_menu_recalc_text">Recalculate</string>
+    <string name="item_change_category_text">Change categories</string>
 
 
 </resources>

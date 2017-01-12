@@ -294,8 +294,8 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main, menu);
 
 
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateOptionsMenu");
