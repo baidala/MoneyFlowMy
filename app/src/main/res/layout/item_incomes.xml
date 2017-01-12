@@ -11,7 +11,9 @@
     android:clipToPadding="true"
     android:clipChildren="true"
     android:paddingRight="10dp"
-    android:paddingLeft="10dp">
+    android:paddingLeft="10dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp" >
 
 
 <TextView
