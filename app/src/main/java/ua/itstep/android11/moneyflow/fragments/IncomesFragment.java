@@ -42,6 +42,16 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
     private ContentObserver observerIncomes;
 
 
+    public IncomesFragment() {
+    }
+
+    public static IncomesFragment newInstance(int columnCount) {
+        IncomesFragment fragment = new IncomesFragment();
+        Bundle args = new Bundle();
+        args.putInt("num", columnCount);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onResume() {
@@ -135,6 +145,8 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         return null;
     }
 
+
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment onLoadFinished cursors - " +cursor.getCount() );
@@ -165,7 +177,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.item_reCalc);
+        MenuItem menuItem = menu.findItem(R.id.item_sub);
         menuItem.setVisible(false);
 
 

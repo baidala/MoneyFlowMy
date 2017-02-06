@@ -15,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +37,10 @@ import ua.itstep.android11.moneyflow.utils.Prefs;
 public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private ListView lvExpenses;
+
+    public ExpensesFragment() {
+    }
+
     SimpleCursorAdapter scAdapter;
     private  static  final int EXPENSES_LOADER_ID = 1;
 
@@ -52,6 +57,15 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
         }
     };
 
+
+
+    public static ExpensesFragment newInstance(int num) {
+        ExpensesFragment fragment = new ExpensesFragment();
+        Bundle args = new Bundle();
+        args.putInt("num", num);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onResume() {
@@ -161,7 +175,7 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.item_reCalc);
+        MenuItem menuItem = menu.findItem(R.id.item_sub);
         menuItem.setVisible(false);
 
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment onCreateOptionsMenu");
@@ -181,6 +195,12 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
         return true;
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment onCreateContextMenu");
+
+    }
 
     private static class ExpensesCursorLoader extends CursorLoader {
 

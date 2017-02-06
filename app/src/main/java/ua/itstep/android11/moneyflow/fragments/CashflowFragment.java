@@ -2,7 +2,6 @@ package ua.itstep.android11.moneyflow.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -12,13 +11,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,15 +31,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ua.itstep.android11.moneyflow.R;
-import ua.itstep.android11.moneyflow.activities.ChangeCategoryActivity;
-import ua.itstep.android11.moneyflow.dialogs.CategoryDialog;
+
+import ua.itstep.android11.moneyflow.dialogs.SpentsByCategoryDialog;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 import ua.itstep.android11.moneyflow.views.Graphics;
 
@@ -52,6 +51,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
     private TextView tvCashflowIncomes;
     private TextView tvCashflowIncomesSumma;
     private Graphics graphics;
+    private ViewPager viewPager;
     private ViewGroup.LayoutParams layoutParams;
 
     private ListView lvCaregories;
@@ -87,6 +87,9 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 URI_BALANCE_CODE);
     }
 
+    public CashflowFragment() {
+    }
+
 
 
     /*
@@ -103,6 +106,14 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
     */
 
+
+    public static CashflowFragment newInstance(int columnCount) {
+        CashflowFragment fragment = new CashflowFragment();
+        Bundle args = new Bundle();
+        args.putInt("num", columnCount);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onResume() {
@@ -136,6 +147,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         tvCashflowIncomes = (TextView)view.findViewById(R.id.tvCashflowIncomes);
         tvCashflowIncomesSumma = (TextView)view.findViewById(R.id.tvCashflowIncomesSumma);
         graphics = (Graphics) view.findViewById(R.id.vGraphics);
+        viewPager = (ViewPager) container.findViewById(R.id.vpDashboard);
 
         tvCashflowExpenses.setText(Prefs.URI_EXPENSES_TYPE);
         tvCashflowIncomes.setText(Prefs.URI_INCOMES_TYPE);
@@ -167,13 +179,13 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment setOnItemClickListener onItemClick id:" + id);
 
-                CategoryDialog categoryDialog = new CategoryDialog();
+                SpentsByCategoryDialog spentsByCategoryDialog = new SpentsByCategoryDialog();
 
                 Bundle args = new Bundle();
                 args.putLong(Prefs.FIELD_ID, id);
 
-                categoryDialog.setArguments(args);
-                categoryDialog.show(getFragmentManager(), "CF");
+                spentsByCategoryDialog.setArguments(args);
+                spentsByCategoryDialog.show(getFragmentManager(), "CF");
 
             }
         });
@@ -295,12 +307,18 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName()+" onCreateContextMenu");
+
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.item_change_category);
-        menuItem.setIntent( new Intent(getActivity().getApplicationContext(), ChangeCategoryActivity.class) );
+
 
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateOptionsMenu");
 
@@ -315,11 +333,34 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 getActivity().getSupportLoaderManager().restartLoader(CASHFLOW_LOADER_ID, null, this);
                 getActivity().getSupportLoaderManager().restartLoader(CATEGORY_LOADER_ID, null, this);
 
-                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_refresh");
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onOptionsItemSelected item_refresh" );
                 break;
 
             case R.id.item_change_category:
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_change_category");
+
+
+
+                //TODO
+
+                //TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabDashboard);
+                //tabLayout.setEnabled(false);
+
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                Fragment fragment = null;
+
+                try {
+                    fragment = CategoryFragment.newInstance(1);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                fm.beginTransaction().replace(R.id.vpDashboard, fragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null)
+                        .commit();
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onOptionsItemSelected item_change_category replace");
 
 
                 break;

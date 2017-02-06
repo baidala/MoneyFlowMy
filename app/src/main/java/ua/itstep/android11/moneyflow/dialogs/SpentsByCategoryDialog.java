@@ -27,7 +27,7 @@ import ua.itstep.android11.moneyflow.utils.Prefs;
  * Created by Maksim Baydala on 21/12/16.
  */
 
-public class CategoryDialog extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class SpentsByCategoryDialog extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     SimpleCursorAdapter scAdapter;
     ListView lvCategory;
@@ -36,7 +36,7 @@ public class CategoryDialog extends DialogFragment implements LoaderManager.Load
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d(Prefs.LOG_TAG, "CategoryDialog onCreateDialog");
+        Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog onCreateDialog");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_categories, null, true);
@@ -78,7 +78,7 @@ public class CategoryDialog extends DialogFragment implements LoaderManager.Load
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CategoryDialog onCreateLoader id: "+ getArguments().getLong(Prefs.FIELD_ID));
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog onCreateLoader id: "+ getArguments().getLong(Prefs.FIELD_ID));
 
         if (id == CATEGORY_LOADER_ID) {
 
@@ -90,12 +90,12 @@ public class CategoryDialog extends DialogFragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CategoryDialog onLoadFinished() ");
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog onLoadFinished() ");
 
         switch (loader.getId()) {
             case CATEGORY_LOADER_ID:
                 scAdapter.swapCursor(data);
-                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CategoryDialog onLoadFinishe  CATEGORY_LOADER_ID");
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog onLoadFinishe  CATEGORY_LOADER_ID");
                 break;
         }
     }
@@ -103,7 +103,7 @@ public class CategoryDialog extends DialogFragment implements LoaderManager.Load
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CategoryDialog onLoaderReset() ");
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog onLoaderReset() ");
         scAdapter.swapCursor(null);
     }
 
@@ -120,13 +120,13 @@ public class CategoryDialog extends DialogFragment implements LoaderManager.Load
 
             this.id = catgId;
 
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CategoryDialog CategoryCursorLoader() ");
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog CategoryCursorLoader() ");
 
         }
 
         @Override
         public Cursor loadInBackground() {
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CategoryDialog CategoryCursorLoader loadInBackground");
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog CategoryCursorLoader loadInBackground");
 
             String _id = Long.toString(id);
             String where = Prefs.FIELD_CATG_ID + " = CAST (? AS INTEGER)";
@@ -137,10 +137,10 @@ public class CategoryDialog extends DialogFragment implements LoaderManager.Load
             if(Prefs.DEBUG) logCursor(cursor);
 
             if ( (cursor == null) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
-                Log.e(Prefs.LOG_TAG, "CategoryDialog  CategoryCursorLoader loadInBackground - Cursor is NULL");
+                Log.e(Prefs.LOG_TAG, "SpentsByCategoryDialog  CategoryCursorLoader loadInBackground - Cursor is NULL");
             }
 
-            if (Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CategoryDialog CategoryCursorLoader loadInBackground count - " + cursor.getCount());
+            if (Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog CategoryCursorLoader loadInBackground count - " + cursor.getCount());
 
 
             return cursor;
@@ -162,7 +162,7 @@ public class CategoryDialog extends DialogFragment implements LoaderManager.Load
                     } while (c.moveToNext());
                 }
             } else {
-                Log.d(Prefs.LOG_TAG, "CategoryDialog  logCursor - Cursor is null");
+                Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog  logCursor - Cursor is null");
             }
         }
 

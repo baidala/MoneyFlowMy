@@ -35,7 +35,7 @@
     <string name="title_category_dialog">Spents by category</string>
     <string name="item_submenu_text">submenu</string>
     <string name="item_menu_recalc_text">Recalculate</string>
-    <string name="item_change_category_text">Change categories</string>
+    <string name="item_edit_category_text">Edit categories</string>
 
 
 </resources>
