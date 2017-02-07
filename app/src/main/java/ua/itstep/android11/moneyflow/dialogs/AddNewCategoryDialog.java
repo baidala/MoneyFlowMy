@@ -74,10 +74,10 @@ public class AddNewCategoryDialog extends DialogFragment  {
         ContentValues cvCategory = new ContentValues();
         String name = etCategory.getText().toString();
         cvCategory.put(Prefs.FIELD_DESC, name);
-        Uri expenseId = cr.insert(Prefs.URI_CATEGORY, cvCategory);
+        //Uri expenseId = cr.insert(Prefs.URI_CATEGORY, cvCategory);
 
 
-        if (expenseId == null) Log.d(Prefs.LOG_TAG, "AddNewExpensesDialog addNewExpense expenseId  = NULL");
+        //if (expenseId == null) Log.d(Prefs.LOG_TAG, "AddNewExpensesDialog addNewExpense expenseId  = NULL");
 
     }
 
