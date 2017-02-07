@@ -30,7 +30,7 @@ public class ChangeCategoryDialog extends DialogFragment  implements LoaderManag
     MyCategoryRecyclerViewAdapter scAdapter;
     RecyclerView lvCategories;
     private  static  final int CATEGORY_LOADER_ID = 7;
-    public final static int FRAGMENT_CHANGE_CATEGORIES = 2;
+
 
     @NonNull
     @Override
@@ -46,10 +46,6 @@ public class ChangeCategoryDialog extends DialogFragment  implements LoaderManag
         lvCategories.setAdapter(scAdapter);
 
         getActivity().getSupportLoaderManager().restartLoader( CATEGORY_LOADER_ID, getArguments(), this );
-
-
-
-
 
         builder.setView(view)
                 .setTitle(R.string.title_change_categories_dialog)
@@ -74,6 +70,10 @@ public class ChangeCategoryDialog extends DialogFragment  implements LoaderManag
 
 
     private void addCategory(){
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() + " addCategory  ");
+
+        AddNewCategoryDialog categoryDialog = new AddNewCategoryDialog();
+        categoryDialog.show(getActivity().getSupportFragmentManager(), "ED");
 
     }
 

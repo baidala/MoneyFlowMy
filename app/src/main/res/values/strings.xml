@@ -38,6 +38,8 @@
     <string name="item_edit_category_text">Edit categories</string>
     <string name="title_change_categories_dialog">Change categories</string>
     <string name="add_button_dialog">Add</string>
+    <string name="hint_category">Category</string>
+    <string name="title_add_new_category_dialog">Add new category</string>
 
 
 </resources>

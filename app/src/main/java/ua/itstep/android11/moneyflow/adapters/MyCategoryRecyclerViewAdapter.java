@@ -170,7 +170,7 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
         private final TextView tvContent;
         private Button btnDelete;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             tvCategoryId = (TextView) view.findViewById(R.id.tvCategoryId);
@@ -186,7 +186,6 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  constructor () ");
 
         }
-
 
         @Override
         public String toString() {

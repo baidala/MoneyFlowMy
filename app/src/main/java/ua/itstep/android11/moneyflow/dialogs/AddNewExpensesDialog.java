@@ -171,7 +171,7 @@ public class AddNewExpensesDialog extends DialogFragment implements LoaderManage
     }
 
 
-
+    //to load categories into spinner
     private static class ExpensesDialogCursorLoader extends CursorLoader {
 
 
