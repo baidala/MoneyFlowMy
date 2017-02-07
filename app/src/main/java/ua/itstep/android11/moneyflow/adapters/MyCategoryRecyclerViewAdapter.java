@@ -1,4 +1,4 @@
-package ua.itstep.android11.moneyflow.fragments;
+package ua.itstep.android11.moneyflow.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -11,16 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ua.itstep.android11.moneyflow.R;
-import ua.itstep.android11.moneyflow.fragments.CategoryFragment.OnListFragmentInteractionListener;
-import ua.itstep.android11.moneyflow.fragments.dummy.DummyContent.DummyItem;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCategoryRecyclerViewAdapter.ViewHolder> {
 
 
@@ -71,9 +64,7 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onBindViewHolder() ");
 
-        //holder.mItem = mValues.get(position);
-        //holder.mIdView.setText(mValues.get(position).id);
-        //holder.mContentView.setText(mValues.get(position).content);
+
         if(!dataValid){
             throw new IllegalStateException("This should only be called when the cursor is valid");
         }
@@ -89,7 +80,7 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
 
     private void onBindViewHolder(final ViewHolder holder, Cursor c){
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onBindViewHolder cursor () ");
-        //TODO parse cursor
+
         holder.tvCategoryId.setText(c.getString(c.getColumnIndex(Prefs.FIELD_ID)));
         holder.tvContent.setText(c.getString(c.getColumnIndex(Prefs.FIELD_CATEGORY)));
     }

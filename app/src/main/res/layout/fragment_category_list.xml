@@ -10,6 +10,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="ua.itstep.android11.moneyflow.fragments.CategoryFragment"
     tools:listitem="@layout/fragment_category_item"
     android:background="@color/colorAccent"/>

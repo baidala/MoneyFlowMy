@@ -18,7 +18,7 @@ import android.view.View;
 
 
 import ua.itstep.android11.moneyflow.R;
-import ua.itstep.android11.moneyflow.fragments.MyCategoryRecyclerViewAdapter;
+import ua.itstep.android11.moneyflow.adapters.MyCategoryRecyclerViewAdapter;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 
 /**

@@ -350,23 +350,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                 changeCategoryDialog.show(fm, "CD");
 
 
-                /*
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                Fragment fragment = null;
 
-                try {
-                    fragment = CategoryFragment.newInstance(1);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                fm.beginTransaction().replace(R.id.vpDashboard, fragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .addToBackStack(null)
-                        .commit();
-                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onOptionsItemSelected item_change_category replace");
-
-                */
 
                 break;
 
