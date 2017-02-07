@@ -19,7 +19,8 @@
         android:paddingRight="6dp"
         android:paddingLeft="6dp"
         android:paddingTop="4dp"
-        android:paddingBottom="4dp"/>
+        android:paddingBottom="4dp"
+        android:background="#FFFDFADB"/>
 
 
 </LinearLayout>

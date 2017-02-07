@@ -37,6 +37,7 @@
     <string name="item_menu_recalc_text">Recalculate</string>
     <string name="item_edit_category_text">Edit categories</string>
     <string name="title_change_categories_dialog">Change categories</string>
+    <string name="add_button_dialog">Add</string>
 
 
 </resources>

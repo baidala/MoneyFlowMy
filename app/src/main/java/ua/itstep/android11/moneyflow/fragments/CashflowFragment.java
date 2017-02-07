@@ -340,10 +340,6 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
             case R.id.item_change_category:
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_change_category");
 
-
-
-                //TODO
-
                 FragmentManager fm = getActivity().getSupportFragmentManager();
 
                 ChangeCategoryDialog changeCategoryDialog = new ChangeCategoryDialog();

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import ua.itstep.android11.moneyflow.R;
@@ -154,20 +155,33 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
 
     }
 
+    private void delete(){
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  delete () ");
+
+
+    }
 
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
 
-        public final TextView tvCategoryId;
-        public final TextView tvContent;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private final View mView;
+        private final TextView tvCategoryId;
+        private final TextView tvContent;
+        private Button btnDelete;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             tvCategoryId = (TextView) view.findViewById(R.id.tvCategoryId);
             tvContent = (TextView) view.findViewById(R.id.tvContent);
+            btnDelete = (Button) view.findViewById(R.id.btnDelete);
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    delete();
+                }
+            });
 
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  constructor () ");
 

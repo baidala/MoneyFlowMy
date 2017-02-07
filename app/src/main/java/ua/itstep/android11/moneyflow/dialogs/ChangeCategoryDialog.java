@@ -58,11 +58,23 @@ public class ChangeCategoryDialog extends DialogFragment  implements LoaderManag
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();
                     }
+                })
+                .setNeutralButton(R.string.add_button_dialog, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addCategory();
+                    }
                 });
 
 
 
         return builder.create();
+    }
+
+
+
+    private void addCategory(){
+
     }
 
 
