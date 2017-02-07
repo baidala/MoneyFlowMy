@@ -1,6 +1,10 @@
 package ua.itstep.android11.moneyflow.fragments;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +13,8 @@ import android.widget.TextView;
 import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.fragments.CategoryFragment.OnListFragmentInteractionListener;
 import ua.itstep.android11.moneyflow.fragments.dummy.DummyContent.DummyItem;
+import ua.itstep.android11.moneyflow.utils.Prefs;
 
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -19,60 +23,192 @@ import java.util.List;
  */
 public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCategoryRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
 
-    public MyCategoryRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+
+    private Cursor cursor;
+    private NotifyingDataSetObserver dataSetObserver;
+    private final Context context;
+    private int rowId;
+    private boolean dataValid;
+
+
+    public MyCategoryRecyclerViewAdapter(Context context, Cursor c) {
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" CONSTRUCT ");
+
+        this.context = context;
+        this.cursor = c;
+        dataValid = cursor != null;
+        rowId = dataValid ? cursor.getColumnIndex(Prefs.FIELD_ID) : -1 ;
+        dataSetObserver = new NotifyingDataSetObserver();
+        if( cursor != null){
+            cursor.registerDataSetObserver(dataSetObserver);
+        }
+
+
+
     }
+
+    public Cursor getCursor(){
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" getCursor() ");
+
+        return cursor;
+    }
+
+
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onCreateViewHolder() ");
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_category_item, parent, false);
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onBindViewHolder() ");
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
+        //holder.mItem = mValues.get(position);
+        //holder.mIdView.setText(mValues.get(position).id);
+        //holder.mContentView.setText(mValues.get(position).content);
+        if(!dataValid){
+            throw new IllegalStateException("This should only be called when the cursor is valid");
+        }
+        if(!cursor.moveToPosition(position)){
+            throw new IllegalStateException("Couldn't move cursor to position "+position);
+        }
+        onBindViewHolder(holder, cursor);
+
+
+
+
     }
+
+    private void onBindViewHolder(final ViewHolder holder, Cursor c){
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onBindViewHolder cursor () ");
+        //TODO parse cursor
+        holder.tvCategoryId.setText(c.getString(c.getColumnIndex(Prefs.FIELD_ID)));
+        holder.tvContent.setText(c.getString(c.getColumnIndex(Prefs.FIELD_CATEGORY)));
+    }
+
+
+
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  getItemCount () ");
+        if( dataValid && cursor != null ){
+            return cursor.getCount();
+        }
+        return 0;
     }
+
+    @Override
+    public long getItemId(int position) {
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  getItemId () ");
+
+        if( dataValid && cursor != null && cursor.moveToPosition(position) ){
+            return cursor.getLong(rowId);
+        }
+        return 0;
+    }
+
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  setHasStableIds () ");
+
+        //super.setHasStableIds(hasStableIds);
+        super.setHasStableIds(true);
+    }
+
+
+    public Cursor swapCursor(Cursor newCursor){
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  swapCursor () ");
+
+        if( newCursor == cursor){
+            return  null;
+        }
+        final Cursor oldCursor = cursor;
+        if( oldCursor != null && dataSetObserver != null ){
+            oldCursor.unregisterDataSetObserver(dataSetObserver);
+        }
+        cursor = newCursor;
+        if( cursor != null ){
+            if( dataSetObserver != null ){
+                cursor.registerDataSetObserver(dataSetObserver);
+            }
+            rowId = newCursor.getColumnIndexOrThrow(Prefs.FIELD_ID);
+            dataValid = true;
+            notifyDataSetChanged();
+        } else {
+            rowId = -1;
+            dataValid = false;
+            notifyDataSetChanged();
+        }
+        return oldCursor;
+
+
+    }
+
+    public void changeCursor(Cursor c){
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  changeCursor () ");
+
+        Cursor oldC = swapCursor(c);
+        if( oldC != null){
+            oldC.close();
+        }
+
+    }
+
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+
+        public final TextView tvCategoryId;
+        public final TextView tvContent;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.tvCategoryId);
-            mContentView = (TextView) view.findViewById(R.id.tvContent);
+            tvCategoryId = (TextView) view.findViewById(R.id.tvCategoryId);
+            tvContent = (TextView) view.findViewById(R.id.tvContent);
+
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  constructor () ");
+
         }
+
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + tvContent.getText() + "'";
         }
     }
-}
+
+
+    private class NotifyingDataSetObserver extends DataSetObserver {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            dataValid = true;
+            notifyDataSetChanged();
+
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  onChanged () ");
+        }
+
+        @Override
+        public void onInvalidated() {
+            super.onInvalidated();
+            dataValid = false;
+            notifyDataSetChanged();
+
+            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  onInvalidated () ");
+        }
+    }
+
+
+} //MyCategoryRecyclerViewAdapter

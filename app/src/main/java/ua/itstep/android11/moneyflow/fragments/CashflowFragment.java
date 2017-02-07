@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import ua.itstep.android11.moneyflow.R;
 
+import ua.itstep.android11.moneyflow.dialogs.ChangeCategoryDialog;
 import ua.itstep.android11.moneyflow.dialogs.SpentsByCategoryDialog;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 import ua.itstep.android11.moneyflow.views.Graphics;
@@ -343,10 +344,13 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
                 //TODO
 
-                //TabLayout tabLayout = (TabLayout)getActivity().findViewById(R.id.tabDashboard);
-                //tabLayout.setEnabled(false);
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+
+                ChangeCategoryDialog changeCategoryDialog = new ChangeCategoryDialog();
+                changeCategoryDialog.show(fm, "CD");
 
 
+                /*
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 Fragment fragment = null;
 
@@ -362,6 +366,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
                         .commit();
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onOptionsItemSelected item_change_category replace");
 
+                */
 
                 break;
 
