@@ -68,16 +68,17 @@ public class AddNewCategoryDialog extends DialogFragment  {
 
     private void addNewCategory() {
 
-        Log.d(Prefs.LOG_TAG, "AddNewCategoryDialog addNewCategory: " + etCategory.getText().toString());
+        Log.d(Prefs.LOG_TAG, getClass().getSimpleName() + " addNewCategory: " + etCategory.getText().toString());
 
         ContentResolver cr = getContext().getContentResolver();
         ContentValues cvCategory = new ContentValues();
         String name = etCategory.getText().toString();
-        cvCategory.put(Prefs.FIELD_DESC, name);
-        //Uri expenseId = cr.insert(Prefs.URI_CATEGORY, cvCategory);
+        cvCategory.put(Prefs.FIELD_CATEGORY, name);
+        //TODO
+        Uri expenseId = cr.insert(Prefs.URI_CATEGORY, cvCategory);
 
 
-        //if (expenseId == null) Log.d(Prefs.LOG_TAG, "AddNewExpensesDialog addNewExpense expenseId  = NULL");
+        if (expenseId == null) Log.d(Prefs.LOG_TAG, "AddNewExpensesDialog addNewExpense expenseId  = NULL");
 
     }
 

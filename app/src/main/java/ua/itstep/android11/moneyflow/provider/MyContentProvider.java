@@ -183,6 +183,18 @@ public class MyContentProvider extends ContentProvider {
                     Log.e(Prefs.LOG_TAG,"Failed to insert row into "+ uri);
                 }
                 break;
+
+            case URI_CATEGORY_CODE:
+                Log.d(Prefs.LOG_TAG, "MyContentProvider URI_CATEGORY_CODE");
+                id = database.insert(Prefs.TABLE_CATEGORY, null, values);
+                if ( id != 0 ) {
+                    insertUri = ContentUris.withAppendedId(Prefs.URI_CATEGORY, id);
+                    getContext().getContentResolver().notifyChange(uri, null);
+                } else {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to insert row into "+ uri);
+                    Log.e(Prefs.LOG_TAG,"Failed to insert row into "+ uri);
+                }
+                break;
         }
         return insertUri;
     }
