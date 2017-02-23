@@ -46,8 +46,6 @@
         android:textAlignment="gravity"
         android:textSize="22sp"
         android:textColor="@android:color/black"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
         android:layout_column="3"
         android:gravity="right"
         android:layout_gravity="right" />

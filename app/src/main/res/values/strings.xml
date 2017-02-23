@@ -17,8 +17,8 @@
     <string name="title_add_new_expense_dialog">Add expense</string>
     <string name="positive_button_dialog">Ok</string>
     <string name="negativ_button_dialog">Cancel</string>
-    <string name="hint_text">Comment</string>
-    <string name="hint_volume">Summa</string>
+    <string name="hint_text">Title</string>
+    <string name="hint_volume">00.00</string>
     <string name="critical">Critical</string>
     <string name="button_show_expenses_text">Show all Expenses</string>
 
