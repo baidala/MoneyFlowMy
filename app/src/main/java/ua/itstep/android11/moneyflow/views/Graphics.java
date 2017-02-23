@@ -74,11 +74,11 @@ public class Graphics extends View {
             }
         }
 
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw after right: " +right);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw after bottom: " +bottom);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw after width: " +width);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw after topI: " +topI);
-        Log.d(Prefs.LOG_TAG , "Graphics onDraw after topE: " +topE);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after right: " + right);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after bottom: " + bottom);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after width: " + width);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after topI: " + topI);
+        Log.d(Prefs.LOG_TAG , "Graphics onDraw after topE: " + topE);
 
         float leftE = right + width;
         float rightE = leftE + width;

@@ -159,13 +159,13 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
         layoutParams = graphics.getLayoutParams();
 
-        layoutParams.width = metrics.widthPixels / 3;
-        layoutParams.height = metrics.heightPixels / 2;
+        //layoutParams.width = metrics.widthPixels / 2;
+        //layoutParams.height = metrics.heightPixels / 2;
 
 
 
-        Log.d(Prefs.LOG_TAG,"layoutParams.width: " + layoutParams.width);
-        Log.d(Prefs.LOG_TAG,"layoutParams.height: " + layoutParams.height);
+        Log.d(Prefs.LOG_TAG,"layoutParams.width: " + layoutParams.width +" pix");
+        Log.d(Prefs.LOG_TAG,"layoutParams.height: " + layoutParams.height +" pix");
 
 
         scCategoriesAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
