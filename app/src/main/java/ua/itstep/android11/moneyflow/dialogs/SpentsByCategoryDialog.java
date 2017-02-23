@@ -20,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 
@@ -31,6 +33,7 @@ public class SpentsByCategoryDialog extends DialogFragment implements LoaderMana
 
     SimpleCursorAdapter scAdapter;
     ListView lvCategory;
+    TextView tvTotalSum;
     private  static  final int CATEGORY_LOADER_ID = 6;
 
 
@@ -52,6 +55,7 @@ public class SpentsByCategoryDialog extends DialogFragment implements LoaderMana
                 CursorAdapter.NO_SELECTION);
 
         lvCategory = (ListView) view.findViewById(R.id.lvDialogCategories);
+        tvTotalSum = (TextView) view.findViewById(R.id.tvTotalSum);
 
         lvCategory.setAdapter(scAdapter);
 
@@ -95,6 +99,7 @@ public class SpentsByCategoryDialog extends DialogFragment implements LoaderMana
         switch (loader.getId()) {
             case CATEGORY_LOADER_ID:
                 scAdapter.swapCursor(data);
+                tvTotalSum.setText( cursorSum(data) );
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog onLoadFinishe  CATEGORY_LOADER_ID");
                 break;
         }
@@ -105,6 +110,24 @@ public class SpentsByCategoryDialog extends DialogFragment implements LoaderMana
     public void onLoaderReset(Loader<Cursor> loader) {
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog onLoaderReset() ");
         scAdapter.swapCursor(null);
+    }
+
+
+    private String cursorSum(Cursor c) {
+        float summ = 0f;
+
+        if ( c != null && c.moveToFirst() ) {
+            do {
+                    summ += c.getFloat(c.getColumnIndex(Prefs.FIELD_SUMMA));  //type REAL in db
+                    if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, Float.toString(summ));
+                } while (c.moveToNext());
+
+        } else {
+            Log.e(Prefs.LOG_TAG, "SpentsByCategoryDialog  logCursor - Cursor is null");
+        }
+
+        return String.format(Locale.ENGLISH, "%.2f", summ);
+        //return Float.toString(summ);
     }
 
 
@@ -134,14 +157,14 @@ public class SpentsByCategoryDialog extends DialogFragment implements LoaderMana
 
             Cursor cursor = getContext().getContentResolver().query(Prefs.URI_EXPENSES, new String[]{Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_DATE, Prefs.TABLE_CATEGORY+"."+Prefs.FIELD_CATEGORY}, where, whereArgs, null);
 
-            if(Prefs.DEBUG) logCursor(cursor);
+
 
             if ( (cursor == null) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
                 Log.e(Prefs.LOG_TAG, "SpentsByCategoryDialog  CategoryCursorLoader loadInBackground - Cursor is NULL");
+            } else {
+                if(Prefs.DEBUG) logCursor(cursor);
+                if (Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog CategoryCursorLoader loadInBackground count - " + cursor.getCount());
             }
-
-            if (Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "SpentsByCategoryDialog CategoryCursorLoader loadInBackground count - " + cursor.getCount());
-
 
             return cursor;
         }

@@ -33,6 +33,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import java.util.Locale;
+
 import ua.itstep.android11.moneyflow.R;
 
 import ua.itstep.android11.moneyflow.dialogs.ChangeCategoryDialog;
@@ -264,8 +266,13 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         switch (loader.getId()) {
             case CASHFLOW_LOADER_ID:
                 if ( data != null && data.moveToFirst() ) {
-                    tvCashflowExpensesSumma.setText( data.getString(data.getColumnIndex(Prefs.FIELD_SUMMA_EXPENSES)) + Prefs.UAH );
-                    tvCashflowIncomesSumma.setText( data.getString(data.getColumnIndex(Prefs.FIELD_SUMMA_INCOMES)) + Prefs.UAH );
+                    StringBuilder summa = new StringBuilder( String.format(Locale.ENGLISH, "%.2f", data.getFloat(data.getColumnIndex(Prefs.FIELD_SUMMA_EXPENSES)) ) ) ;
+                    summa.append(Prefs.UAH) ;
+                    tvCashflowExpensesSumma.setText( summa.toString() );
+
+                    summa = new StringBuilder( String.format(Locale.ENGLISH, "%.2f", data.getFloat(data.getColumnIndex(Prefs.FIELD_SUMMA_INCOMES))) ) ;
+                    summa.append(Prefs.UAH) ;
+                    tvCashflowIncomesSumma.setText( summa.toString() );
 
                     graphics.setValues( data.getFloat(data.getColumnIndex(Prefs.FIELD_SUMMA_INCOMES)),
                                         data.getFloat(data.getColumnIndex(Prefs.FIELD_SUMMA_EXPENSES)) );

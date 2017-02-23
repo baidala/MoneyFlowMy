@@ -36,7 +36,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
     long id = 0;
     long categoryId = 0;
     int position = 0;
-    double summa_old = 0;
+    float summa_old = 0.0f;
     private  static  final int INCOMES_LOADER_ID = 4;
 
 
@@ -93,7 +93,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
         id = getArguments().getLong(Prefs.FIELD_ID);
 
         try {
-            summa_old = Double.parseDouble(etSumma.getText().toString());
+            summa_old = Float.parseFloat(etSumma.getText().toString());
         } catch (NumberFormatException ex){}
 
         summa_old *= -1;
@@ -184,7 +184,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
         ContentValues cvIncomes = new ContentValues();
 
 
-        double summa = Double.parseDouble(etSumma.getText().toString());
+        float summa = Float.parseFloat(etSumma.getText().toString());
         String name = acNameOfIncome.getText().toString();
         String catgId = Long.toString(categoryId);
 

@@ -65,7 +65,7 @@ public class MyContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) throws SQLException {
         Log.d(Prefs.LOG_TAG, "MyContentProvider insert");
 
-        long id = 0l;
+        long id = 0L;
         Uri insertUri = null;
         ContentValues cvDescription;
         ContentValues cvBalance;
@@ -112,7 +112,7 @@ public class MyContentProvider extends ContentProvider {
                 }
 
                 ContentValues cvExpense = new ContentValues();
-                cvExpense.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvExpense.put( Prefs.FIELD_SUMMA, values.getAsFloat(Prefs.FIELD_SUMMA) );
                 cvExpense.put( Prefs.FIELD_DESC_ID, id );
                 cvExpense.put( Prefs.FIELD_DATE, values.getAsString(Prefs.FIELD_DATE) );
                 cvExpense.put( Prefs.FIELD_CATG_ID, values.getAsLong(Prefs.FIELD_CATG_ID) );
@@ -133,7 +133,7 @@ public class MyContentProvider extends ContentProvider {
                 }
 
                 cvBalance = new ContentValues();
-                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsFloat(Prefs.FIELD_SUMMA) );
                 updateBalance( cvBalance );
                 break;
 
@@ -154,7 +154,7 @@ public class MyContentProvider extends ContentProvider {
                 }
 
                 ContentValues cvIncomes = new ContentValues();
-                cvIncomes.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvIncomes.put( Prefs.FIELD_SUMMA, values.getAsFloat(Prefs.FIELD_SUMMA) );
                 cvIncomes.put( Prefs.FIELD_DESC_ID, id );
                 cvIncomes.put( Prefs.FIELD_DATE, values.getAsString(Prefs.FIELD_DATE) );
                 id = database.insert(Prefs.TABLE_INCOMES, null, cvIncomes);
@@ -168,7 +168,7 @@ public class MyContentProvider extends ContentProvider {
                 }
 
                 cvBalance = new ContentValues();
-                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsFloat(Prefs.FIELD_SUMMA) );
                 updateBalance( cvBalance );
                 break;
 
@@ -294,7 +294,7 @@ public class MyContentProvider extends ContentProvider {
                 Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_EXPENSES_CODE");
 
                 ContentValues cvExpense = new ContentValues();
-                cvExpense.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvExpense.put( Prefs.FIELD_SUMMA, values.getAsFloat(Prefs.FIELD_SUMMA) );
                 cvExpense.put( Prefs.FIELD_CATG_ID, values.getAsLong(Prefs.FIELD_CATG_ID) );
 
                 updated = database.update(Prefs.TABLE_EXPENSES, cvExpense, where, whereArgs);
@@ -309,11 +309,11 @@ public class MyContentProvider extends ContentProvider {
                 }
 
                 cvBalance = new ContentValues();
-                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsDouble(Prefs.FIELD_SUMMA_EXPENSES) );
+                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsFloat(Prefs.FIELD_SUMMA_EXPENSES) );
                 updateBalance( cvBalance );
 
                 cvBalance.clear();
-                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvBalance.put( Prefs.FIELD_SUMMA_EXPENSES, values.getAsFloat(Prefs.FIELD_SUMMA) );
                 updateBalance( cvBalance );
 
                 cvDescription = new ContentValues();
@@ -326,7 +326,7 @@ public class MyContentProvider extends ContentProvider {
                 Log.d(Prefs.LOG_TAG, "MyContentProvider update URI_INCOMES_CODE");
 
                 ContentValues cvIncomes = new ContentValues();
-                cvIncomes.put( Prefs.FIELD_SUMMA, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvIncomes.put( Prefs.FIELD_SUMMA, values.getAsFloat(Prefs.FIELD_SUMMA) );
                 cvIncomes.put( Prefs.FIELD_CATG_ID, values.getAsLong(Prefs.FIELD_CATG_ID) );
 
                 updated = database.update(Prefs.TABLE_INCOMES, cvIncomes, where, whereArgs);
@@ -341,11 +341,11 @@ public class MyContentProvider extends ContentProvider {
                 }
 
                 cvBalance = new ContentValues();
-                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsDouble(Prefs.FIELD_SUMMA_INCOMES) );
+                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsFloat(Prefs.FIELD_SUMMA_INCOMES) );
                 updateBalance( cvBalance );
 
                 cvBalance.clear();
-                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsDouble(Prefs.FIELD_SUMMA) );
+                cvBalance.put( Prefs.FIELD_SUMMA_INCOMES, values.getAsFloat(Prefs.FIELD_SUMMA) );
                 updateBalance( cvBalance );
 
                 cvDescription = new ContentValues();
@@ -404,7 +404,7 @@ public class MyContentProvider extends ContentProvider {
         Log.d(Prefs.LOG_TAG, "MyContentProvider delete");
 
         int deleted = 0;
-        double summa_old = 0;
+        float summa_old = 0f;
         Cursor cursor;
 
         database = dbHelper.getWritableDatabase();
@@ -418,11 +418,11 @@ public class MyContentProvider extends ContentProvider {
 
             case URI_EXPENSES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_EXPENSES_CODE");
-                summa_old = 0;
+                summa_old = 0f;
 
                 cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA}, whereClause, whereArgs, null, null, null);
                 if ( cursor.moveToFirst() ) {
-                    summa_old = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
+                    summa_old = cursor.getFloat(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
                 }
                 cursor.close();
 
@@ -452,10 +452,10 @@ public class MyContentProvider extends ContentProvider {
             case URI_INCOMES_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_INCOMES_CODE");
 
-                summa_old = 0;
+                summa_old = 0f;
                 cursor = database.query(Prefs.TABLE_INCOMES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_SUMMA}, whereClause, whereArgs, null, null, null);
                 if ( cursor.moveToFirst() ) {
-                    summa_old = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
+                    summa_old = cursor.getFloat(cursor.getColumnIndex(Prefs.FIELD_SUMMA));
                 }
                 cursor.close();
 
@@ -510,7 +510,7 @@ public class MyContentProvider extends ContentProvider {
 
     private void updateDescription(ContentValues cvDescription, String where, String[] whereArgs) {
         Cursor cursor;
-        long id = 0l;
+        long id = 0L;
 
         cursor = database.query(Prefs.TABLE_EXPENSES, new String[]{Prefs.FIELD_ID, Prefs.FIELD_DESC_ID}, where, whereArgs, null, null, null);
         if ( cursor.moveToFirst() ) {
@@ -526,14 +526,14 @@ public class MyContentProvider extends ContentProvider {
 
     private void updateBalance(ContentValues cvBalance) {
         Cursor cursor;
-        double summa;
+        float summa = 0f;
 
         if ( cvBalance.containsKey(Prefs.FIELD_SUMMA_EXPENSES) ) {
-            summa = cvBalance.getAsDouble(Prefs.FIELD_SUMMA_EXPENSES);
+            summa = cvBalance.getAsFloat(Prefs.FIELD_SUMMA_EXPENSES);
             cursor = database.query(Prefs.TABLE_BALANCE, new String[]{Prefs.FIELD_SUMMA_EXPENSES}, null, null, null, null, null);
             if ( cursor.moveToFirst() ) {
 
-                double summaExpenses = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA_EXPENSES));
+                float summaExpenses = cursor.getFloat(cursor.getColumnIndex(Prefs.FIELD_SUMMA_EXPENSES));
                 summa += summaExpenses;
 
                 Log.d(Prefs.LOG_TAG, "MyContentProvider updateBalance update summaExpenses  = "+ summa);
@@ -551,11 +551,11 @@ public class MyContentProvider extends ContentProvider {
             }
 
         } else {
-            summa = cvBalance.getAsDouble(Prefs.FIELD_SUMMA_INCOMES);
+            summa = cvBalance.getAsFloat(Prefs.FIELD_SUMMA_INCOMES);
             cursor = database.query(Prefs.TABLE_BALANCE, new String[]{Prefs.FIELD_SUMMA_INCOMES}, null, null, null, null, null);
             if ( cursor.moveToFirst() ) {
 
-                double summaIncomes = cursor.getDouble(cursor.getColumnIndex(Prefs.FIELD_SUMMA_INCOMES));
+                float summaIncomes = cursor.getFloat(cursor.getColumnIndex(Prefs.FIELD_SUMMA_INCOMES));
                 summa += summaIncomes;
 
                 Log.d(Prefs.LOG_TAG, "MyContentProvider updateBalance update summaIncomes  = "+ summa);

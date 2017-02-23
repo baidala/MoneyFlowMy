@@ -45,7 +45,7 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
     long id = 0;
     long categoryId = 0;
     int position = 0;
-    double summa_old = 0;
+    float summa_old = 0f;
     private  static  final int EXPENSES_LOADER_ID = 4;
 
 
@@ -102,7 +102,7 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
         id = getArguments().getLong(Prefs.FIELD_ID);
 
         try {
-            summa_old = Double.parseDouble(etSumma.getText().toString());
+            summa_old = Float.parseFloat(etSumma.getText().toString());
         } catch (NumberFormatException ex){}
 
         summa_old *= -1;
@@ -140,7 +140,6 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
 
 
         builder.setView(view)
-                .setMessage(R.string.message_change_expense_dialog)
                 .setTitle(R.string.title_change_expense_dialog)
                 .setPositiveButton(R.string.positive_button_dialog, new DialogInterface.OnClickListener() {
                     @Override
@@ -193,7 +192,7 @@ public class ChangeExpensesDialog extends DialogFragment implements LoaderManage
         ContentValues cvExpense = new ContentValues();
 
 
-        double summa = Double.parseDouble(etSumma.getText().toString());
+        float summa = Float.parseFloat(etSumma.getText().toString());
         String name = acNameOfExpense.getText().toString();
         String catgId = Long.toString(categoryId);
 

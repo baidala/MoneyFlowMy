@@ -37,10 +37,6 @@ import ua.itstep.android11.moneyflow.utils.Prefs;
 public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private ListView lvExpenses;
-
-    public ExpensesFragment() {
-    }
-
     SimpleCursorAdapter scAdapter;
     private  static  final int EXPENSES_LOADER_ID = 1;
 
@@ -56,6 +52,10 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
 
         }
     };
+
+
+    public ExpensesFragment() {
+    }
 
 
 

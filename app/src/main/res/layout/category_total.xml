@@ -19,8 +19,8 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"/>
 
-        <TextView
-            android:id="@+id/tvExpensesNames"
+    <TextView
+            android:id="@+id/tvTotalSum"
             android:text="00.00"
             android:textSize="22sp"
             android:textStyle="bold"
