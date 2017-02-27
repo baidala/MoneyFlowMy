@@ -49,7 +49,7 @@ public class ChangeCategoryDialog extends DialogFragment  implements LoaderManag
 
         builder.setView(view)
                 .setTitle(R.string.title_change_categories_dialog)
-                .setPositiveButton(R.string.positive_button_dialog, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.close_button_dialog, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();

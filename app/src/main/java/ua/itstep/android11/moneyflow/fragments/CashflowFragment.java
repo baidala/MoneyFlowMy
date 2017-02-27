@@ -6,6 +6,7 @@ import android.content.UriMatcher;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,7 @@ import java.util.Locale;
 
 import ua.itstep.android11.moneyflow.R;
 
+import ua.itstep.android11.moneyflow.db.DBHelper;
 import ua.itstep.android11.moneyflow.dialogs.ChangeCategoryDialog;
 import ua.itstep.android11.moneyflow.dialogs.SpentsByCategoryDialog;
 import ua.itstep.android11.moneyflow.utils.Prefs;
@@ -485,9 +487,54 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
 
                 if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onOptionsItemSelected item_reCalc");
                 break;
+
+            case R.id.item_add_fk:
+                //updateDB();
+                break;
+
         }
         return true;
     }
+
+
+    //only for debug
+    private void updateDB(){
+        SQLiteDatabase database;
+        DBHelper dbHelper;
+
+        dbHelper = new DBHelper(getContext(), Prefs.DB_CURRENT_VERSION);
+        database = dbHelper.getWritableDatabase();
+
+        String fk_off = "PRAGMA foreign_key=off";
+        String fk_on = "PRAGMA foreign_key=on";
+        String drop_exp = "DROP TABLE expenses_old;" ;
+        String rename_exp = "ALTER TABLE expenses RENAME TO expenses_old;" ;
+        String CREATE_TABLE_EXPENSES = String.format("CREATE TABLE %s (%s integer primary key autoincrement, %s real, %s text, %s integer, %s integer, CONSTRAINT fk_category FOREIGN KEY (%S) REFERENCES %S(%S), CONSTRAINT fk_decsription FOREIGN KEY (%S) REFERENCES %S(%S) ON DELETE CASCADE ON UPDATE CASCADE );",
+                Prefs.TABLE_EXPENSES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID, Prefs.FIELD_CATG_ID, Prefs.FIELD_CATG_ID, Prefs.TABLE_CATEGORY, Prefs.FIELD_ID, Prefs.FIELD_DESC_ID, Prefs.TABLE_DESCRIPTION, Prefs.FIELD_ID);
+        String insert = "INSERT INTO expenses SELECT * FROM expenses_old;" ;
+
+        database.execSQL(fk_off);
+        //database.execSQL(drop_exp);
+        database.beginTransaction();
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "beginTransaction");
+
+        database.execSQL(rename_exp);
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "rename_exp");
+
+        database.execSQL(CREATE_TABLE_EXPENSES);
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CREATE_TABLE_EXPENSES");
+
+        database.execSQL(insert);
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "insert");
+
+        database.endTransaction();
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "commit");
+
+        //database.execSQL(drop_exp);
+        //if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "drop");
+        database.execSQL(fk_on);
+    }
+
 
     private void recalcData(Uri uriTable) {
         ContentValues cvBalance;

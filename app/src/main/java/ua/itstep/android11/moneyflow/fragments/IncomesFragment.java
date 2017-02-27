@@ -213,7 +213,7 @@ public class IncomesFragment extends Fragment implements LoaderManager.LoaderCal
         public Cursor loadInBackground() throws SQLException {
             //if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "IncomesFragment IncomesCursorLoader loadInBackground");
 
-            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_DATE}, null, null, null);
+            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_DATE}, null, null, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID +" DESC");
             //if(Prefs.DEBUG) logCursor(cursor);
 
 

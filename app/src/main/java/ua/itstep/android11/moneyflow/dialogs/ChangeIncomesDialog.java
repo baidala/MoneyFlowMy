@@ -31,11 +31,11 @@ import ua.itstep.android11.moneyflow.utils.Prefs;
 public class ChangeIncomesDialog extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     EditText etSumma;
     AutoCompleteTextView acNameOfIncome;
-    Spinner spinner;
+    //Spinner spinner;
     SimpleCursorAdapter adapter;
     long id = 0;
-    long categoryId = 0;
-    int position = 0;
+    //long categoryId = 0;
+    //int position = 0;
     float summa_old = 0.0f;
     private  static  final int INCOMES_LOADER_ID = 4;
 
@@ -51,7 +51,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
         acNameOfIncome = (AutoCompleteTextView) view.findViewById(R.id.acNameOfIncome);
         //TODO set adapter for AutocompliteTextView
 
-
+        /*
         String[] from = new String[] {Prefs.FIELD_CATEGORY};
         int[] to = new int[] {android.R.id.text1};
 
@@ -84,7 +84,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
 
             }
         });
-
+        */
 
 
 
@@ -103,6 +103,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
         String whereClause = Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID + " = CAST (? AS INTEGER)";
         String[] whereArgs = {_id};
 
+        /*
         Cursor cursor = getContext().getContentResolver().query(Prefs.URI_INCOMES, new String[]{Prefs.TABLE_INCOMES+"."+Prefs.FIELD_ID, Prefs.TABLE_INCOMES+"."+Prefs.FIELD_CATG_ID }, whereClause, whereArgs, null);
 
         if ( cursor.moveToFirst() ) {
@@ -128,7 +129,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
         spinner.setSelection(position);
 
         Log.d(Prefs.LOG_TAG, "ChangeIncomesDialog onCreateDialog set position: "+ position);
-
+        */
 
         builder.setView(view)
                 //.setMessage(R.string.message_change_incomes_dialog)
@@ -145,7 +146,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
                         deleteIncomes();
                     }
                 })
-                .setNegativeButton(R.string.negativ_button_dialog, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.negative_button_dialog, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();
@@ -186,16 +187,16 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
 
         float summa = Float.parseFloat(etSumma.getText().toString());
         String name = acNameOfIncome.getText().toString();
-        String catgId = Long.toString(categoryId);
+        //String catgId = Long.toString(categoryId);
 
-        Log.d(Prefs.LOG_TAG, "ChangeIncomesDialog changeIncomes category: " + categoryId);
+        //Log.d(Prefs.LOG_TAG, "ChangeIncomesDialog changeIncomes category: " + categoryId);
         //String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         //TODO
 
         cvIncomes.put(Prefs.FIELD_SUMMA, summa);
         cvIncomes.put(Prefs.FIELD_SUMMA_INCOMES, summa_old);
         cvIncomes.put(Prefs.FIELD_DESC, name);
-        cvIncomes.put(Prefs.FIELD_CATG_ID, catgId);
+        //cvIncomes.put(Prefs.FIELD_CATG_ID, catgId);
         //cvIncomes.put(Prefs.FIELD_DATE, date);
 
         String _id = Long.toString(id);
@@ -218,7 +219,7 @@ public class ChangeIncomesDialog extends DialogFragment implements LoaderManager
 
         if (id == INCOMES_LOADER_ID) {
 
-            return new IncomesDialogCursorLoader(getActivity());
+            //return new IncomesDialogCursorLoader(getActivity());
         }
         return null;
     }

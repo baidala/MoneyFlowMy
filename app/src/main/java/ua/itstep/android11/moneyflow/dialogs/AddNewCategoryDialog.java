@@ -55,7 +55,7 @@ public class AddNewCategoryDialog extends DialogFragment  {
                         addNewCategory();
                     }
                 })
-                .setNegativeButton(R.string.negativ_button_dialog, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.negative_button_dialog, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();

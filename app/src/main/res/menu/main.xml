@@ -19,6 +19,13 @@
                 android:title="@string/item_edit_category_text"
                 app:showAsAction="ifRoom"
                 />
+            <item
+                android:id="@+id/item_add_fk"
+                android:icon="@android:drawable/ic_menu_edit"
+                android:title="@string/item_add_fk_text"
+                app:showAsAction="ifRoom"
+                />
+
         </menu>
     </item>
     <item

@@ -204,7 +204,6 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
 
     private static class ExpensesCursorLoader extends CursorLoader {
 
-
         ExpensesCursorLoader( Context context ) {
 
             super(context, Prefs.URI_EXPENSES,
@@ -220,13 +219,15 @@ public class ExpensesFragment extends Fragment implements LoaderManager.LoaderCa
         public Cursor loadInBackground() {
             //if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment ExpensesCursorLoader loadInBackground");
 
-            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_EXPENSES, new String[]{Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_DATE, Prefs.TABLE_CATEGORY+"."+Prefs.FIELD_CATEGORY}, null, null, null);
+            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_EXPENSES, new String[]{Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_DATE, Prefs.TABLE_CATEGORY+"."+Prefs.FIELD_CATEGORY}, null, null, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID +" DESC");
 
-            //if(Prefs.DEBUG) logCursor(cursor);
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment ExpensesCursorLoader loadInBackground count - " +cursor.getCount());
+
 
             if ( (cursor == null) || !cursor.moveToFirst() || (0 == cursor.getCount()) ) {
                 Log.e(Prefs.LOG_TAG, "ExpensesFragment  ExpensesCursorLoader loadInBackground - Cursor is null");
+            } else {
+                //if(Prefs.DEBUG) logCursor(cursor);
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "ExpensesFragment ExpensesCursorLoader loadInBackground count - " +cursor.getCount());
             }
 
             return cursor;

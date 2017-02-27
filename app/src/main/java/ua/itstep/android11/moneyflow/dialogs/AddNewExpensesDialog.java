@@ -95,7 +95,7 @@ public class AddNewExpensesDialog extends DialogFragment implements LoaderManage
                         addNewExpense();
                     }
                 })
-                .setNegativeButton(R.string.negativ_button_dialog, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.negative_button_dialog, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();

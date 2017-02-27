@@ -28,6 +28,8 @@ public class MyContentProvider extends ContentProvider {
     public static final int URI_DESCRIPTION_CODE = 3;
     public static final int URI_CATEGORY_CODE = 4;
 
+    private static String FK_ON = "PRAGMA foreign_key=on";
+
     static {
         uriMatcher.addURI(Prefs.URI_BALANCE_AUTHORITIES,
                 Prefs.URI_BALANCE_TYPE,
@@ -71,6 +73,7 @@ public class MyContentProvider extends ContentProvider {
         ContentValues cvBalance;
 
         database = dbHelper.getWritableDatabase();
+        database.execSQL(FK_ON);
 
         switch (uriMatcher.match(uri)) {
             case URI_BALANCE_CODE:
@@ -215,6 +218,8 @@ public class MyContentProvider extends ContentProvider {
             Log.d(Prefs.LOG_TAG, "MyContentProvider query getReadableDatabase");
         }
 
+
+
         Cursor cursor = null;
 
         switch (uriMatcher.match(uri)) {
@@ -263,6 +268,7 @@ public class MyContentProvider extends ContentProvider {
         ContentValues cvDescription;
 
         database = dbHelper.getWritableDatabase();
+        database.execSQL(FK_ON);
 
         switch (uriMatcher.match(uri)) {
             case URI_BALANCE_CODE:
@@ -408,6 +414,7 @@ public class MyContentProvider extends ContentProvider {
         Cursor cursor;
 
         database = dbHelper.getWritableDatabase();
+        database.execSQL(FK_ON);
 
         switch (uriMatcher.match(uri)) {
             case URI_BALANCE_CODE:
@@ -506,6 +513,7 @@ public class MyContentProvider extends ContentProvider {
         Log.e(Prefs.LOG_TAG,"Not yet implemented");
         return null;
     }
+
 
 
     private void updateDescription(ContentValues cvDescription, String where, String[] whereArgs) {

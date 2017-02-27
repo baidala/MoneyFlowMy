@@ -1,5 +1,6 @@
 package ua.itstep.android11.moneyflow.adapters;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
@@ -155,9 +156,21 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
 
     }
 
-    private void delete(){
+    private void delete(String id){
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  delete () ");
 
+        ContentResolver cr = context.getContentResolver();
+
+        //String _id = id;
+        String whereClause = Prefs.FIELD_ID + " = CAST (? AS INTEGER)";
+        String[] whereArgs = {id};
+
+        int deletedRows = cr.delete(Prefs.URI_CATEGORY, whereClause, whereArgs);
+        Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" deletedRows: " + deletedRows);
+
+        if (deletedRows == 0) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" deletedRows == 0 !!!");
+
+        notifyDataSetChanged();
 
     }
 
@@ -176,10 +189,11 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
             tvCategoryId = (TextView) view.findViewById(R.id.tvCategoryId);
             tvContent = (TextView) view.findViewById(R.id.tvContent);
             btnDelete = (Button) view.findViewById(R.id.btnDelete);
+
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    delete();
+                    delete(tvCategoryId.getText().toString());
                 }
             });
 

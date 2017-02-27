@@ -26,16 +26,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //balance(id, summa)
 
-    private static final String CREATE_TABLE_EXPENSES = String.format("create table %s (%s integer primary key autoincrement, %s real, %s text, %s integer, %s integer);",
-            Prefs.TABLE_EXPENSES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID, Prefs.FIELD_CATG_ID);
-    private static final String CREATE_TABLE_INCOMES = String.format("create table %s (%s integer primary key autoincrement, %s real, %s text, %s integer, %s integer);",
-            Prefs.TABLE_INCOMES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID, Prefs.FIELD_CATG_ID);
-    private static final String CREATE_TABLE_BALANCE = String.format("create table %s (%s integer primary key autoincrement, %s real, %s real);",
-            Prefs.TABLE_BALANCE, Prefs.FIELD_ID, Prefs.FIELD_SUMMA_EXPENSES, Prefs.FIELD_SUMMA_INCOMES);
     private static final String CREATE_TABLE_DESCRIPTION = String.format("create table %s (%s integer primary key autoincrement, %s text);",
             Prefs.TABLE_DESCRIPTION, Prefs.FIELD_ID, Prefs.FIELD_DESC);
     private static final String CREATE_TABLE_CATEGORY = String.format("create table %s (%s integer primary key autoincrement, %s text);",
             Prefs.TABLE_CATEGORY, Prefs.FIELD_ID, Prefs.FIELD_CATEGORY);
+    private static final String CREATE_TABLE_EXPENSES = String.format("CREATE TABLE %s (%s integer primary key autoincrement, %s real, %s text, %s integer, %s integer, CONSTRAINT fk_category FOREIGN KEY (%S) REFERENCES %S(%S), CONSTRAINT fk_decsription FOREIGN KEY (%S) REFERENCES %S(%S) ON DELETE CASCADE ON UPDATE CASCADE);",
+            Prefs.TABLE_EXPENSES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID, Prefs.FIELD_CATG_ID, Prefs.FIELD_CATG_ID, Prefs.TABLE_CATEGORY, Prefs.FIELD_ID, Prefs.FIELD_DESC_ID, Prefs.TABLE_DESCRIPTION, Prefs.FIELD_ID);
+    private static final String CREATE_TABLE_INCOMES = String.format("create table %s (%s integer primary key autoincrement, %s real, %s text, %s integer, %s integer);",
+            Prefs.TABLE_INCOMES, Prefs.FIELD_ID, Prefs.FIELD_SUMMA, Prefs.FIELD_DATE, Prefs.FIELD_DESC_ID, Prefs.FIELD_CATG_ID);
+    private static final String CREATE_TABLE_BALANCE = String.format("create table %s (%s integer primary key autoincrement, %s real, %s real);",
+            Prefs.TABLE_BALANCE, Prefs.FIELD_ID, Prefs.FIELD_SUMMA_EXPENSES, Prefs.FIELD_SUMMA_INCOMES);
+
 
     private static final String INSERT_CATEGORY_FOOD = String.format("insert into %s values(1,'default category');", Prefs.TABLE_CATEGORY);
     //private static final String INSERT_CATEGORY_ELECTR = String.format("insert into %s values(2,'electric');", Prefs.TABLE_CATEGORY);

@@ -67,7 +67,7 @@ public class SpentsByCategoryDialog extends DialogFragment implements LoaderMana
 
         builder.setView(view)
                 .setTitle(R.string.title_category_dialog)
-                .setPositiveButton(R.string.positive_button_dialog, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.close_button_dialog, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();
@@ -154,8 +154,9 @@ public class SpentsByCategoryDialog extends DialogFragment implements LoaderMana
             String _id = Long.toString(id);
             String where = Prefs.FIELD_CATG_ID + " = CAST (? AS INTEGER)";
             String[] whereArgs = {_id};
+            String sortOrder = Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID + " DESC" ;
 
-            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_EXPENSES, new String[]{Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_DATE, Prefs.TABLE_CATEGORY+"."+Prefs.FIELD_CATEGORY}, where, whereArgs, null);
+            Cursor cursor = getContext().getContentResolver().query(Prefs.URI_EXPENSES, new String[]{Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_ID, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_SUMMA, Prefs.TABLE_DESCRIPTION+"."+Prefs.FIELD_DESC, Prefs.TABLE_EXPENSES+"."+Prefs.FIELD_DATE, Prefs.TABLE_CATEGORY+"."+Prefs.FIELD_CATEGORY}, where, whereArgs, sortOrder);
 
 
 
