@@ -3,8 +3,12 @@ package ua.itstep.android11.moneyflow.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.UriMatcher;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
@@ -27,9 +31,18 @@ import ua.itstep.android11.moneyflow.utils.Prefs;
 
 public class ChangeCategoryDialog extends DialogFragment  implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    MyCategoryRecyclerViewAdapter scAdapter;
-    RecyclerView lvCategories;
+    private MyCategoryRecyclerViewAdapter scAdapter;
+    private RecyclerView lvCategories;
     private  static  final int CATEGORY_LOADER_ID = 7;
+    private ContentObserver observer;
+    private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    private static final int URI_CATEGORY_CODE = 3;
+
+    static {
+        uriMatcher.addURI(Prefs.URI_CATEGORY_AUTHORITIES,
+                Prefs.URI_CATEGORY_TYPE,
+                URI_CATEGORY_CODE);
+    }
 
 
     @NonNull
@@ -45,7 +58,28 @@ public class ChangeCategoryDialog extends DialogFragment  implements LoaderManag
         scAdapter.setHasStableIds(true);
         lvCategories.setAdapter(scAdapter);
 
-        getActivity().getSupportLoaderManager().restartLoader( CATEGORY_LOADER_ID, getArguments(), this );
+        observer = new ContentObserver(new Handler()) {
+
+            @Override
+            public void onChange(boolean selfChange, Uri uri) {
+                super.onChange(selfChange, uri);
+                if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"ContentObserver  onChange selfChange ="+ selfChange +"||"+uri);
+
+                switch (uriMatcher.match(uri)) {
+                    case URI_CATEGORY_CODE:
+                        getActivity().getSupportLoaderManager().restartLoader(CATEGORY_LOADER_ID, null, ChangeCategoryDialog.this);
+                        Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"ContentObserver  onChange URI_CATEGORY_CODE ");
+                        break;
+                }
+            }
+
+        };
+
+
+
+        getActivity().getContentResolver().registerContentObserver(Prefs.URI_CATEGORY, false, observer);
+
+        getActivity().getSupportLoaderManager().restartLoader( CATEGORY_LOADER_ID, getArguments(), this );  //use restart loader
 
         builder.setView(view)
                 .setTitle(R.string.title_change_categories_dialog)
@@ -67,7 +101,19 @@ public class ChangeCategoryDialog extends DialogFragment  implements LoaderManag
         return builder.create();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() + " onResume ");
+        getActivity().getContentResolver().registerContentObserver(Prefs.URI_CATEGORY, true, observer);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() + " onPause ");
+        getActivity().getContentResolver().unregisterContentObserver(observer);
+    }
 
     private void addCategory(){
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() + " addCategory  ");
@@ -106,7 +152,7 @@ public class ChangeCategoryDialog extends DialogFragment  implements LoaderManag
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onLoaderReset() ");
-        scAdapter.swapCursor(null);
+        scAdapter.changeCursor(null);
     }
 
 

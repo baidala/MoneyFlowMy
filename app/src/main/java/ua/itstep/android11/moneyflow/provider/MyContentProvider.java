@@ -497,6 +497,19 @@ public class MyContentProvider extends ContentProvider {
             case URI_CATEGORY_CODE:
                 Log.d(Prefs.LOG_TAG, "MyContentProvider delete URI_CATEGORY_CODE");
 
+                deleted = database.delete(Prefs.TABLE_CATEGORY, whereClause, whereArgs);
+
+                if ( deleted != 0 ) {
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider delete CATEGORY uri:"+ uri);
+
+                    getContext().getContentResolver().notifyChange(uri, null);
+
+                    Log.d(Prefs.LOG_TAG, "MyContentProvider delete notifyChange deleted = "+ deleted);
+
+                } else {
+                    if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "MyContentProvider Failed to delete row in "+ uri);
+                    Log.e(Prefs.LOG_TAG, "Failed to delete row in "+ uri);
+                }
 
                 break;
         }

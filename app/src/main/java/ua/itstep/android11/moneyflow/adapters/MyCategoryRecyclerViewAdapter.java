@@ -21,9 +21,9 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
 
 
     private Cursor cursor;
-    private NotifyingDataSetObserver dataSetObserver;
+    //private NotifyingDataSetObserver dataSetObserver;
     private final Context context;
-    private int rowId;
+    private int columnId;
     private boolean dataValid;
 
 
@@ -32,13 +32,15 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
 
         this.context = context;
         this.cursor = c;
-        dataValid = cursor != null;
-        rowId = dataValid ? cursor.getColumnIndex(Prefs.FIELD_ID) : -1 ;
-        dataSetObserver = new NotifyingDataSetObserver();
+        dataValid = cursor != null ;
+        columnId = dataValid ? cursor.getColumnIndexOrThrow(Prefs.FIELD_ID) : -1 ; //cursor.getColumnIndex returns index for the given column name, or -1 if the column name does not exist.
+        //dataSetObserver = new NotifyingDataSetObserver();
+        /*
         if( cursor != null){
             cursor.registerDataSetObserver(dataSetObserver);
         }
-
+        */
+        setHasStableIds(true);
 
 
     }
@@ -64,20 +66,18 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onBindViewHolder() ");
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" onBindViewHolder() "+ position);
 
 
         if(!dataValid){
             throw new IllegalStateException("This should only be called when the cursor is valid");
         }
+        //move to position
         if(!cursor.moveToPosition(position)){
             throw new IllegalStateException("Couldn't move cursor to position "+position);
         }
+
         onBindViewHolder(holder, cursor);
-
-
-
-
     }
 
     private void onBindViewHolder(final ViewHolder holder, Cursor c){
@@ -101,45 +101,50 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
 
     @Override
     public long getItemId(int position) {
-        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  getItemId () ");
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  getItemId ( " +position+ " )  columnId =" +columnId);
 
         if( dataValid && cursor != null && cursor.moveToPosition(position) ){
-            return cursor.getLong(rowId);
+            return cursor.getLong(columnId);
         }
-        return 0;
+        return RecyclerView.NO_ID;
     }
 
     @Override
     public void setHasStableIds(boolean hasStableIds) {
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  setHasStableIds () ");
 
-        //super.setHasStableIds(hasStableIds);
-        super.setHasStableIds(true);
+        super.setHasStableIds(hasStableIds);
+        //super.setHasStableIds(true);
     }
 
 
-    public Cursor swapCursor(Cursor newCursor){
+    private Cursor swapCursor(Cursor newCursor){
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  swapCursor () ");
 
         if( newCursor == cursor){
             return  null;
         }
         final Cursor oldCursor = cursor;
+        /*
         if( oldCursor != null && dataSetObserver != null ){
             oldCursor.unregisterDataSetObserver(dataSetObserver);
         }
+        */
+        int itemCount = getItemCount();
         cursor = newCursor;
         if( cursor != null ){
+            /*
             if( dataSetObserver != null ){
                 cursor.registerDataSetObserver(dataSetObserver);
             }
-            rowId = newCursor.getColumnIndexOrThrow(Prefs.FIELD_ID);
+            */
+            columnId = newCursor.getColumnIndexOrThrow(Prefs.FIELD_ID);
             dataValid = true;
             notifyDataSetChanged();
         } else {
-            rowId = -1;
+            columnId = -1;
             dataValid = false;
-            notifyDataSetChanged();
+            notifyItemRangeRemoved(0, itemCount);
         }
         return oldCursor;
 
@@ -160,17 +165,18 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  delete () ");
 
         ContentResolver cr = context.getContentResolver();
-
-        //String _id = id;
+        //int position = -1;
+        int position = Integer.valueOf(id);
         String whereClause = Prefs.FIELD_ID + " = CAST (? AS INTEGER)";
         String[] whereArgs = {id};
 
         int deletedRows = cr.delete(Prefs.URI_CATEGORY, whereClause, whereArgs);
-        Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" deletedRows: " + deletedRows);
+        Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  deletedRows: " + deletedRows);
 
         if (deletedRows == 0) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +" deletedRows == 0 !!!");
 
-        notifyDataSetChanged();
+        //notifyDataSetChanged(); //TODO
+        notifyItemRemoved(position);
 
     }
 
@@ -207,22 +213,24 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
         }
     }
 
-
+    //Receives call backs when a data set(Cursor) has been changed, or made invalid.
     private class NotifyingDataSetObserver extends DataSetObserver {
         @Override
         public void onChanged() {
-            super.onChanged();
+            super.onChanged(); //do nothing in parent class
             dataValid = true;
             notifyDataSetChanged();
 
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  onChanged () ");
         }
 
+        //on cursor close
         @Override
         public void onInvalidated() {
-            super.onInvalidated();
+            super.onInvalidated(); //do nothing in parent class
             dataValid = false;
-            notifyDataSetChanged();
+            //notifyDataSetChanged();
+            notifyItemRangeRemoved(0, getItemCount());
 
             if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  onInvalidated () ");
         }
