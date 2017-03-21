@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -34,6 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import java.util.List;
 import java.util.Locale;
 
 import ua.itstep.android11.moneyflow.R;
@@ -41,15 +41,18 @@ import ua.itstep.android11.moneyflow.R;
 import ua.itstep.android11.moneyflow.db.DBHelper;
 import ua.itstep.android11.moneyflow.dialogs.ChangeCategoryDialog;
 import ua.itstep.android11.moneyflow.dialogs.SpentsByCategoryDialog;
+import ua.itstep.android11.moneyflow.interfaces.IMvpView;
+import ua.itstep.android11.moneyflow.models.Record;
 import ua.itstep.android11.moneyflow.utils.Prefs;
 import ua.itstep.android11.moneyflow.views.Graphics;
+
 
 
 
 /**
  * Created by Maksim Baydala on 04/10/16.
  */
-public class CashflowFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CashflowFragment extends Fragment implements IMvpView, LoaderManager.LoaderCallbacks<Cursor> {
 
     private TextView tvCashflowExpenses;
     private TextView tvCashflowExpensesSumma;
@@ -126,6 +129,8 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onResume ");
         getActivity().getContentResolver().registerContentObserver(Prefs.URI_BALANCE, true, observer);
         getActivity().getContentResolver().registerContentObserver(Prefs.URI_CATEGORY, true, observer);
+
+        presenter.bindView(this);
     }
 
     @Override
@@ -133,6 +138,8 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         super.onPause();
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onPause ");
         getActivity().getContentResolver().unregisterContentObserver(observer);
+
+        presenter.unbind
     }
 
 
@@ -235,6 +242,13 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
         if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, "CashflowFragment onCreateView getLoader = "+ loader);
 
         return view;
+    }
+
+
+    @Override
+    public void showItems(List<Record> items) {
+        if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName()+" showItems");
+
     }
 
 
@@ -601,6 +615,7 @@ public class CashflowFragment extends Fragment implements LoaderManager.LoaderCa
             Log.e(Prefs.LOG_TAG, "CashflowFragment onStartLoading - Cursor is NULL");
         }
     }
+
 
 
 

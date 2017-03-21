@@ -213,28 +213,6 @@ public class MyCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyCatego
         }
     }
 
-    //Receives call backs when a data set(Cursor) has been changed, or made invalid.
-    private class NotifyingDataSetObserver extends DataSetObserver {
-        @Override
-        public void onChanged() {
-            super.onChanged(); //do nothing in parent class
-            dataValid = true;
-            notifyDataSetChanged();
-
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  onChanged () ");
-        }
-
-        //on cursor close
-        @Override
-        public void onInvalidated() {
-            super.onInvalidated(); //do nothing in parent class
-            dataValid = false;
-            //notifyDataSetChanged();
-            notifyItemRangeRemoved(0, getItemCount());
-
-            if(Prefs.DEBUG) Log.d(Prefs.LOG_TAG, getClass().getSimpleName() +"  onInvalidated () ");
-        }
-    }
 
 
 } //MyCategoryRecyclerViewAdapter
