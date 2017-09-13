@@ -16,4 +16,4 @@ Used activity,3 fragments, broadcast receiver, content provider, sqliteDB, obser
 
 ![alt text](./Screenshot_1479460634.png  "Expenses")
  
-![alt text](./activity.jpg  "Schema")
+![alt text](./SMS.jpg  "Schema")
