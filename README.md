@@ -8,7 +8,7 @@ See schemes
 
 App for maintaining spents and incomes.
 - add/delete/edit spents and incomes
-- autopars of SMS messages from your bank 
+- autoparse SMS messages from your bank 
 - view spents by categories/summary by category
 - edit categories dictionary
 
