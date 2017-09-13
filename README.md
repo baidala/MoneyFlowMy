@@ -13,3 +13,4 @@ App for maintaining spents and incomes.
 - edit categories dictionary
 
 Used activity,3 fragments, broadcast receiver, content provider, sqliteDB, observers
+![image]( MoneyFlowMy/Screenshot_1479460634.png )
