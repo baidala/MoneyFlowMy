@@ -15,3 +15,5 @@ App for maintaining spents and incomes.
 Used activity,3 fragments, broadcast receiver, content provider, sqliteDB, observers
 
 ![alt text](./Screenshot_1479460634.png  "Expenses")
+ 
+![alt text](./activity.jpg  "Schema")
