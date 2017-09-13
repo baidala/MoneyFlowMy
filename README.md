@@ -13,3 +13,4 @@ App for maintaining spents and incomes.
 - edit categories dictionary
 
 Used activity,3 fragments, broadcast receiver, content provider, sqliteDB, observers
+![alt text](./etc/api-gateway.png "API Gateway")
